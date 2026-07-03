@@ -36,20 +36,16 @@ export default function Globe({ size = 260 }) {
         const geo = new THREE.SphereGeometry(1, 48, 48);
         const tex = new THREE.TextureLoader().load(EARTH_TEXTURE);
         tex.colorSpace = THREE.SRGBColorSpace;
-        const mat = new THREE.MeshPhongMaterial({ map: tex, shininess: 12 });
+        const mat = new THREE.MeshBasicMaterial({ map: tex });
         const earth = new THREE.Mesh(geo, mat);
+        earth.rotation.y = Math.PI * 1.6; // start on the Americas day side
         scene.add(earth);
 
         const glowGeo = new THREE.SphereGeometry(1.12, 48, 48);
         const glowMat = new THREE.MeshBasicMaterial({
-          color: 0xf5e829, transparent: true, opacity: 0.12, side: THREE.BackSide,
+          color: 0xf5e829, transparent: true, opacity: 0.14, side: THREE.BackSide,
         });
         scene.add(new THREE.Mesh(glowGeo, glowMat));
-
-        scene.add(new THREE.AmbientLight(0xffffff, 1.1));
-        const sun = new THREE.DirectionalLight(0xfff3c4, 1.6);
-        sun.position.set(3, 2, 4);
-        scene.add(sun);
 
         const onMove = (e) => {
           mouse.x = (e.clientX / window.innerWidth - 0.5) * 2;
