@@ -1,0 +1,140 @@
+/* CULTURE IN UNITY - design system derived from the flyer */
+
+:root {
+    --sky-top: #7eb3e8;
+    --sky-mid: #2e5fd0;
+    --sky-deep: #1c3fa8;
+    --sun-yellow: #f5e829;
+    --indigo: #4b2fd0;
+    --cyan: #7fe8f0;
+    --lime: #d8de3b;
+    --cloud: #ffffff;
+    --ribbon-red: #e94f37;
+    --ribbon-orange: #ff9f1c;
+    --ribbon-green: #2ec46f;
+    --ribbon-teal: #2ab7ca;
+    --earth-ocean: #2a6fbb;
+    --earth-land: #6fbf73;
+    --ink: #1c1c3a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font-body), Arial, sans-serif;
+    color: var(--cloud);
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 55%, var(--sky-deep) 100%);
+    min-height: 100vh;
+}
+
+h1, h2, .display {
+    font-family: var(--font-display), cursive;
+    color: var(--sun-yellow);
+    -webkit-text-stroke: 2px var(--indigo);
+    text-shadow: 3px 4px 0 var(--indigo);
+    letter-spacing: 0.02em;
+    line-height: 1.05;
+}
+
+h3, .label {
+    font-family: var(--font-label), Impact, sans-serif;
+    text-transform: uppercase;
+    color: var(--sun-yellow);
+    text-shadow: 2px 2px 0 var(--indigo);
+    letter-spacing: 0.06em;
+}
+
+a { color: var(--sun-yellow); }
+
+.container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+.btn {
+    display: inline-block;
+    font-family: var(--font-label), Impact, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--sun-yellow);
+    color: var(--indigo);
+    border: 3px solid var(--indigo);
+    border-radius: 999px;
+    padding: 14px 32px;
+    font-size: 1.05rem;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 6px 0 var(--indigo);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 var(--indigo); }
+.btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--indigo); }
+.btn.secondary {
+    background: transparent;
+    color: var(--sun-yellow);
+    border-color: var(--sun-yellow);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.25);
+}
+.btn.glow { animation: pulse 2.4s ease-in-out infinite; }
+
+@keyframes pulse {
+    0%, 100% { filter: drop-shadow(0 0 4px rgba(245, 232, 41, 0.5)); }
+    50% { filter: drop-shadow(0 0 18px rgba(245, 232, 41, 0.95)); }
+}
+
+.get-tickets-fab {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 90;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-radius: 20px;
+    padding: 24px;
+    backdrop-filter: blur(6px);
+}
+.card.solid { background: #ffffff; color: var(--ink); border-color: var(--indigo); }
+
+.ribbon {
+    height: 10px;
+    border-radius: 999px;
+    background: linear-gradient(90deg,
+                                    var(--ribbon-red), var(--ribbon-orange), var(--sun-yellow),
+                                    var(--ribbon-green), var(--ribbon-teal), var(--sky-mid));
+}
+
+.cloud {
+    position: absolute;
+    background: rgba(255,255,255,0.85);
+    border-radius: 999px;
+    filter: blur(2px);
+    animation: drift linear infinite;
+}
+@keyframes drift {
+    from { transform: translateX(-15vw); }
+    to { transform: translateX(115vw); }
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 2px solid var(--indigo);
+    font-family: var(--font-body), sans-serif;
+    font-size: 1rem;
+    color: var(--ink);
+    background: #fff;
+}
+label { display: block; margin: 14px 0 6px; font-weight: 600; }
+
+.muted { opacity: 0.85; font-size: 0.95rem; }
+.center { text-align: center; }
+.mt-1 { margin-top: 8px; } .mt-2 { margin-top: 16px; } .mt-3 { margin-top: 28px; } .mt-4 { margin-top: 44px; }
+.mb-2 { margin-bottom: 16px; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+}
