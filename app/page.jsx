@@ -35,9 +35,9 @@ export default function Home() {
         <img
           src="/soulprint-logo.svg"
           alt="SOULPRINT"
-          style={{ height: 200, marginBottom: 8, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.3))" }}
+          style={{ height: 300, marginBottom: 10, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.3))" }}
         />
-        <p className="label" style={{ fontSize: "1rem", letterSpacing: "0.2em", color: "var(--cyan)" }}>
+        <p className="label" style={{ fontSize: "clamp(1.2rem, 3vw, 1.8rem)", letterSpacing: "0.18em", color: "var(--cyan)", textShadow: "2px 2px 0 var(--indigo), 0 0 18px rgba(75,47,208,0.6)" }}>
           {EVENT.frame}
         </p>
 
@@ -50,12 +50,12 @@ export default function Home() {
           />
         </div>
 
-        <p className="mt-2" style={{ fontSize: "1.2rem", fontStyle: "italic", textShadow: "0 1px 8px rgba(20,30,90,0.5)" }}>
-          {EVENT.tagline} · {EVENT.tagline2}
+        <p className="label mt-2" style={{ fontSize: "clamp(1.05rem, 2.6vw, 1.5rem)", color: "#fff", textShadow: "0 0 16px rgba(75,47,208,0.95), 0 0 34px rgba(75,47,208,0.7), 0 2px 4px rgba(26,26,80,0.8)" }}>
+          {EVENT.tagline} Â· {EVENT.tagline2}
         </p>
-        <p className="mt-1" style={{ fontSize: "1.05rem", textShadow: "0 1px 8px rgba(20,30,90,0.5)" }}>
-          <strong>{EVENT.dateLabel} · {EVENT.timeLabel}</strong><br />
-          {EVENT.venueName} · {EVENT.venueAddress}
+        <p className="label mt-1" style={{ fontSize: "clamp(0.95rem, 2.2vw, 1.2rem)", color: "#fff", textShadow: "0 0 16px rgba(75,47,208,0.95), 0 0 34px rgba(75,47,208,0.7), 0 2px 4px rgba(26,26,80,0.8)" }}>
+          <strong>{EVENT.dateLabel} Â· {EVENT.timeLabel}</strong><br />
+          {EVENT.venueName} Â· {EVENT.venueAddress}
         </p>
 
         <div className="mt-3" style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", zIndex: 2 }}>
@@ -109,7 +109,7 @@ export default function Home() {
         <div className="ribbon mb-2" />
         <p className="label">Peace and blessings.</p>
         <p className="muted mt-1">
-          Hosted by {EVENT.host} · <Link href="/info">Event info</Link> · <Link href="/terms">Terms</Link> · <Link href="/privacy">Privacy</Link>
+          Hosted by {EVENT.host} Â· <Link href="/info">Event info</Link> Â· <Link href="/terms">Terms</Link> Â· <Link href="/privacy">Privacy</Link>
         </p>
       </footer>
     </main>
