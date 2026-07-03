@@ -39,7 +39,7 @@ export default function FlagBreak() {
   }, []);
 
   return (
-    <div aria-hidden style={{ width: "100vw", position: "relative", left: "50%", transform: "translateX(-50%)", margin: "28px 0", overflow: "hidden" }}>
+    <div aria-hidden style={{ width: "100%", maxWidth: 760, margin: "20px auto", overflow: "hidden" }}>
       <canvas
         ref={ref}
         style={{ width: "100%", height: "auto", display: "block", filter: "drop-shadow(0 8px 14px rgba(26,26,80,0.35))" }}
