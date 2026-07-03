@@ -6,6 +6,7 @@
 import Link from "next/link";
 import TitleArt from "@/components/TitleArt";
 import Cutout from "@/components/Cutout";
+import FlagBreak from "@/components/FlagBreak";
 import { EVENT, ACTIVATIONS } from "@/lib/config";
 
 export default function Home() {
@@ -51,11 +52,11 @@ export default function Home() {
         </div>
 
         <p className="label mt-2" style={{ fontSize: "clamp(1.05rem, 2.6vw, 1.5rem)", color: "#fff", textShadow: "0 0 16px rgba(75,47,208,0.95), 0 0 34px rgba(75,47,208,0.7), 0 2px 4px rgba(26,26,80,0.8)" }}>
-          {EVENT.tagline} Â· {EVENT.tagline2}
+          {EVENT.tagline} ÃÂ· {EVENT.tagline2}
         </p>
         <p className="label mt-1" style={{ fontSize: "clamp(0.95rem, 2.2vw, 1.2rem)", color: "#fff", textShadow: "0 0 16px rgba(75,47,208,0.95), 0 0 34px rgba(75,47,208,0.7), 0 2px 4px rgba(26,26,80,0.8)" }}>
-          <strong>{EVENT.dateLabel} Â· {EVENT.timeLabel}</strong><br />
-          {EVENT.venueName} Â· {EVENT.venueAddress}
+          <strong>{EVENT.dateLabel} ÃÂ· {EVENT.timeLabel}</strong><br />
+          {EVENT.venueName} ÃÂ· {EVENT.venueAddress}
         </p>
 
         <div className="mt-3" style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", zIndex: 2 }}>
@@ -73,7 +74,7 @@ export default function Home() {
 
       {/* THE JOURNEY (Phase 1 preview; full scroll-scenes = Phase 2) */}
       <section id="journey" className="container" style={{ paddingTop: 40, paddingBottom: 40 }}>
-        <div className="ribbon mb-2" />
+        <FlagBreak />
         <h2 className="center" style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
           One day. Nine portals.
         </h2>
@@ -106,10 +107,10 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer className="container center" style={{ padding: "50px 20px 110px" }}>
-        <div className="ribbon mb-2" />
+        <FlagBreak />
         <p className="label">Peace and blessings.</p>
         <p className="muted mt-1">
-          Hosted by {EVENT.host} Â· <Link href="/info">Event info</Link> Â· <Link href="/terms">Terms</Link> Â· <Link href="/privacy">Privacy</Link>
+          Hosted by {EVENT.host} ÃÂ· <Link href="/info">Event info</Link> ÃÂ· <Link href="/terms">Terms</Link> ÃÂ· <Link href="/privacy">Privacy</Link>
         </p>
       </footer>
     </main>
