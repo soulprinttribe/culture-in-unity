@@ -5,6 +5,7 @@
 
 import Link from "next/link";
 import TitleArt from "@/components/TitleArt";
+import Cutout from "@/components/Cutout";
 import { EVENT, ACTIVATIONS } from "@/lib/config";
 
 export default function Home() {
@@ -34,7 +35,7 @@ export default function Home() {
         <img
           src="/soulprint-logo.svg"
           alt="SOULPRINT"
-          style={{ height: 150, marginBottom: 8, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.3))" }}
+          style={{ height: 200, marginBottom: 8, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.3))" }}
         />
         <p className="label" style={{ fontSize: "1rem", letterSpacing: "0.2em", color: "var(--cyan)" }}>
           {EVENT.frame}
@@ -62,16 +63,11 @@ export default function Home() {
           <a href="#journey" className="btn secondary">Enter the world</a>
         </div>
 
-        {/* The globe-head being, body and all */}
-        <img
+        {/* The globe-head being, body and all - white background flood-filled away */}
+        <Cutout
           src="/CULTURE%20IN%20UNITY%20V3_1.png"
           alt="The globe-head being holding planet Earth as its head"
-          style={{
-            width: "min(88vw, 620px)",
-            marginTop: -40,
-            display: "block",
-            pointerEvents: "none",
-          }}
+          style={{ width: "min(88vw, 620px)", marginTop: -40, display: "block", pointerEvents: "none" }}
         />
       </section>
 
