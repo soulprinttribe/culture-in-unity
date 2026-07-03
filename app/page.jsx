@@ -54,7 +54,7 @@ export default function Home() {
         <img
           src="/soulprint-logo.svg"
           alt="SOULPRINT"
-          style={{ height: 130, marginBottom: 10, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.25))" }}
+          style={{ height: 230, marginBottom: 14, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.25))" }}
         />
         <p className="label" style={{ fontSize: "0.95rem", letterSpacing: "0.2em", color: "var(--cyan)" }}>
           {EVENT.frame}
@@ -76,11 +76,11 @@ export default function Home() {
           CULTURE IN UNITY
         </h1>
         <p className="mt-2" style={{ fontSize: "1.25rem", fontStyle: "italic" }}>
-          {EVENT.tagline} · {EVENT.tagline2}
+          {EVENT.tagline} Â· {EVENT.tagline2}
         </p>
         <p className="mt-2" style={{ fontSize: "1.1rem" }}>
-          <strong>{EVENT.dateLabel} · {EVENT.timeLabel}</strong><br />
-          {EVENT.venueName} · {EVENT.venueAddress}
+          <strong>{EVENT.dateLabel} Â· {EVENT.timeLabel}</strong><br />
+          {EVENT.venueName} Â· {EVENT.venueAddress}
         </p>
 
         <div className="mt-3" style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center" }}>
@@ -127,7 +127,7 @@ export default function Home() {
         <div className="ribbon mb-2" />
         <p className="label">Peace and blessings.</p>
         <p className="muted mt-1">
-          Hosted by {EVENT.host} · <Link href="/info">Event info</Link> · <Link href="/terms">Terms</Link> · <Link href="/privacy">Privacy</Link>
+          Hosted by {EVENT.host} Â· <Link href="/info">Event info</Link> Â· <Link href="/terms">Terms</Link> Â· <Link href="/privacy">Privacy</Link>
         </p>
       </footer>
     </main>
