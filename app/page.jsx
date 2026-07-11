@@ -64,6 +64,15 @@ export default function Home() {
           <a href="#journey" className="btn secondary">Enter the world</a>
         </div>
 
+        {/* Creator applications - artists & vendors */}
+        <p className="label mt-3" style={{ fontSize: "clamp(0.85rem, 2vw, 1rem)", letterSpacing: "0.16em", color: "#fff", textShadow: "0 0 14px rgba(75,47,208,0.9), 0 2px 4px rgba(26,26,80,0.8)" }}>
+          Bring your gift to the circle
+        </p>
+        <div className="mt-1" style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", zIndex: 2 }}>
+          <Link href="/submit/artist" className="btn secondary" style={{ fontSize: "0.95rem" }}>Show your art</Link>
+          <Link href="/submit/vendor" className="btn secondary" style={{ fontSize: "0.95rem" }}>Become a vendor</Link>
+        </div>
+
         {/* The globe-head being, body and all - white background flood-filled away */}
         <Cutout
           src="/CULTURE%20IN%20UNITY%20V3_1.png"
@@ -102,6 +111,10 @@ export default function Home() {
           <Link href="/tickets" className="btn glow mt-2" style={{ fontSize: "1.15rem" }}>
             Get Tickets
           </Link>
+          <div className="mt-2" style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+            <Link href="/submit/artist" className="btn secondary">Show your art</Link>
+            <Link href="/submit/vendor" className="btn secondary">Become a vendor</Link>
+          </div>
         </div>
       </section>
 
