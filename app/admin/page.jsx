@@ -1,7 +1,6 @@
 "use client";
 
-// /admin - live sales, revenue, inventory, headcount, exports.
-// Submissions review arrives in Phase 2.
+// /admin - live sales, revenue, inventory, headcount, submissions, exports.
 
 import { useEffect, useState } from "react";
 import PasscodeGate, { usePasscode } from "@/components/PasscodeGate";
@@ -48,7 +47,7 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="container" style={{ paddingTop: 24, paddingBottom: 60, maxWidth: 760 }}>
+    <main className="container" style={{ paddingTop: 24, paddingBottom: 60, maxWidth: 860 }}>
       <h3 style={{ fontSize: "1.5rem" }}>CULTURE IN UNITY - Admin</h3>
 
       {!stats ? (
@@ -58,7 +57,7 @@ export default function AdminPage() {
           <div className="mt-2" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12 }}>
             <div className="card center">
               <div className="label" style={{ fontSize: "1.8rem" }}>${(stats.totals.revenue / 100).toLocaleString()}</div>
-              <div className="muted">Revenue</div>
+              <div className="muted">Ticket revenue</div>
             </div>
             <div className="card center">
               <div className="label" style={{ fontSize: "1.8rem" }}>{stats.totals.sold} / {stats.totals.cap}</div>
@@ -97,14 +96,70 @@ export default function AdminPage() {
             </table>
           </div>
 
+          {stats.byRole && (
+            <>
+              <h3 className="mt-4" style={{ fontSize: "1.2rem" }}>Artists &amp; Vendors</h3>
+              <div className="mt-2" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12 }}>
+                {stats.byRole.map((r) => (
+                  <div key={r.id} className="card center">
+                    <div className="label" style={{ fontSize: "1.6rem", color: r.color }}>{r.paid} / {r.cap}</div>
+                    <div className="muted">{r.label}s paid</div>
+                    <div className="muted mt-1">{r.checkedIn} in · ${(r.revenue / 100).toLocaleString()}</div>
+                  </div>
+                ))}
+              </div>
+
+              {stats.submissions && stats.submissions.length > 0 ? (
+                <div className="card mt-2" style={{ overflowX: "auto" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.92rem" }}>
+                    <thead>
+                      <tr style={{ textAlign: "left", borderBottom: "2px solid rgba(255,255,255,0.4)" }}>
+                        <th style={{ padding: 8 }}>Role</th>
+                        <th style={{ padding: 8 }}>Name</th>
+                        <th style={{ padding: 8 }}>Title / What</th>
+                        <th style={{ padding: 8 }}>Sale</th>
+                        <th style={{ padding: 8 }}>Images</th>
+                        <th style={{ padding: 8 }}>In</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {stats.submissions.map((s) => (
+                        <tr key={s.ref} style={{ borderBottom: "1px solid rgba(255,255,255,0.2)" }}>
+                          <td style={{ padding: 8 }}>
+                            <span style={{ background: s.color, color: "#fff", padding: "2px 8px", borderRadius: 999, fontWeight: 700, fontSize: "0.8rem", textTransform: "uppercase" }}>{s.roleLabel}</span>
+                          </td>
+                          <td style={{ padding: 8 }}>
+                            <strong>{s.name}</strong>
+                            <div className="muted">{s.email}{s.socials ? " · " + s.socials : ""}</div>
+                          </td>
+                          <td style={{ padding: 8 }}>
+                            {s.title ? <strong>{s.title}</strong> : null}
+                            <div className="muted">{s.description}</div>
+                          </td>
+                          <td style={{ padding: 8 }}>{s.forSale ? (s.price || "Yes") : "-"}</td>
+                          <td style={{ padding: 8 }}>
+                            {(s.images || []).map((u, i) => (
+                              <a key={i} href={u} target="_blank" rel="noreferrer" style={{ marginRight: 6 }}>{i + 1}</a>
+                            ))}
+                          </td>
+                          <td style={{ padding: 8 }}>{s.checkedIn ? "✓" : ""}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="muted mt-2">No paid artist or vendor submissions yet.</p>
+              )}
+            </>
+          )}
+
           <div className="mt-3" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <button className="btn" onClick={() => download("doorlist")}>Door / will-call list (CSV)</button>
             <button className="btn secondary" onClick={() => download("subscribers")}>Subscribers (CSV)</button>
             <a className="btn secondary" href="/scan">Open door check-in</a>
           </div>
-          <p className="muted mt-2">
-            Tier prices & caps live in lib/config.js. Submissions review lands here in Phase 2.
-          </p>
+          <p className="muted mt-2">Tier prices, caps, and artist/vendor fees live in lib/config.js. Agreement wording lives in lib/contracts.js.</p>
         </>
       )}
     </main>

@@ -1,6 +1,7 @@
 "use client";
 
 // /scan - door check-in: QR scan + will-call search + live headcount.
+// Handles both attendee tickets and artist/vendor role passes.
 // Staff-only (passcode). Works on any phone with a camera.
 
 import { useEffect, useRef, useState } from "react";
@@ -125,7 +126,27 @@ export default function ScanPage() {
           <div>{result.message}</div>
           {result.ticket && (
             <div className="mt-1" style={{ fontWeight: 400 }}>
-              {result.ticket.name} · {result.ticket.tier}
+              {result.ticket.name}
+              {result.ticket.role ? (
+                <span
+                  style={{
+                    display: "inline-block",
+                    marginLeft: 8,
+                    padding: "2px 12px",
+                    borderRadius: 999,
+                    background: result.ticket.roleColor || "#4b2fd0",
+                    color: "#fff",
+                    fontWeight: 800,
+                    letterSpacing: 1,
+                    textTransform: "uppercase",
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  {result.ticket.tier}
+                </span>
+              ) : (
+                <span> &middot; {result.ticket.tier}</span>
+              )}
               {result.ticket.wristband && (
                 <div className="mt-1" style={{ fontWeight: 700 }}>
                   Wristband: {result.ticket.wristband}
@@ -164,6 +185,7 @@ export default function ScanPage() {
           )}
         </div>
       ))}
+      <p className="muted center mt-3">Artist &amp; vendor passes scan here too - their role shows in its own color.</p>
     </main>
   );
 }
