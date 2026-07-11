@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 import { verifyTicket, requireAdmin } from "@/lib/token";
-import { TIERS, TOTAL_CAP } from "@/lib/config";
+import { TIERS, ROLES, TOTAL_CAP } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +11,55 @@ async function headcount(db) {
     .select("id", { count: "exact", head: true })
     .eq("status", "checked_in");
   return count || 0;
+}
+
+// Handle an artist/vendor role pass (token id prefixed art_/ven_)
+async function checkinSubmission(db, rawId) {
+  const role = rawId.startsWith("art_") ? "artist" : "vendor";
+  const subId = rawId.slice(4);
+  const r = ROLES[role] || { label: role, color: "#4b2fd0" };
+
+  const { data: sub } = await db
+    .from("submissions")
+    .select("*")
+    .eq("id", subId)
+    .maybeSingle();
+
+  if (!sub) {
+    return NextResponse.json({ ok: false, reason: "NOT_FOUND", message: "Pass not found." }, { status: 404 });
+  }
+  if (!sub.fee_paid) {
+    return NextResponse.json({ ok: false, reason: "UNPAID", message: "This pass has not been paid." });
+  }
+  if (sub.checked_in) {
+    return NextResponse.json({
+      ok: false,
+      reason: "ALREADY_USED",
+      message: "Already checked in at " + new Date(sub.checked_in_at).toLocaleTimeString("en-US", { timeZone: "America/New_York" }),
+      ticket: { name: sub.name, tier: r.label, role, roleColor: sub.role_color || r.color },
+      headcount: await headcount(db),
+      cap: TOTAL_CAP,
+    });
+  }
+
+  await db
+    .from("submissions")
+    .update({ checked_in: true, checked_in_at: new Date().toISOString() })
+    .eq("id", sub.id);
+
+  return NextResponse.json({
+    ok: true,
+    message: "Welcome in!",
+    ticket: {
+      name: sub.name,
+      email: sub.email,
+      tier: r.label,
+      role,
+      roleColor: sub.role_color || r.color,
+    },
+    headcount: await headcount(db),
+    cap: TOTAL_CAP,
+  });
 }
 
 // POST { token } - scan a QR; or POST { ticketId, manual: true } - will-call check-in
@@ -32,6 +81,11 @@ export async function POST(request) {
         { status: 400 }
       );
     }
+  }
+
+  // Artist / vendor role pass
+  if (typeof ticketId === "string" && (ticketId.startsWith("art_") || ticketId.startsWith("ven_"))) {
+    return checkinSubmission(db, ticketId);
   }
 
   const { data: ticket } = await db
@@ -57,9 +111,7 @@ export async function POST(request) {
     });
   }
   if (ticket.status === "void") {
-    return NextResponse.json({
-      ok: false, reason: "VOID", message: "This ticket was voided.",
-    });
+    return NextResponse.json({ ok: false, reason: "VOID", message: "This ticket was voided." });
   }
 
   await db
