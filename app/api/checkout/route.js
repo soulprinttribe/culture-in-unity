@@ -34,6 +34,7 @@ export async function POST(request) {
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
     const session = await stripe().checkout.sessions.create({
       mode: "payment",
+      allow_promotion_codes: true,
       customer_email: email || undefined,
       line_items: [
         {
