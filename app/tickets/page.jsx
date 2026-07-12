@@ -53,7 +53,7 @@ export default function TicketsPage() {
   return (
     <main className="container" style={{ paddingTop: 40, paddingBottom: 80, maxWidth: 640 }}>
       <p className="center"><Link href="/" className="muted">back to the portal</Link></p>
-      <h1 className="center" style={{ fontSize: "clamp(2rem, 7vw, 3.2rem)" }}>Get Tickets</h1>
+      <h1 className="center" style={{ fontSize: "clamp(2rem, 7vw, 3.2rem)", fontFamily: "var(--font-label), Impact, 'Arial Narrow Bold', sans-serif" }}>Get Tickets</h1>
       <p className="center mt-1">
         <strong>{EVENT.dateLabel} · {EVENT.timeLabel}</strong><br />
         {EVENT.venueName} · {EVENT.venueAddress}
