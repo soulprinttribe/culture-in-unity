@@ -111,7 +111,7 @@ export default function SubmitForm({ role }) {
   return (
     <main className="container" style={{ paddingTop: 40, paddingBottom: 80, maxWidth: 640 }}>
       <p className="center"><Link href="/" className="muted">back to the portal</Link></p>
-      <h1 className="center" style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)" }}>
+      <h1 className="center" style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)", fontFamily: "var(--font-label), Impact, 'Arial Narrow Bold', sans-serif" }}>
         {isArtist ? "Show Your Art" : "Become a Vendor"}
       </h1>
       <p className="center mt-1">
