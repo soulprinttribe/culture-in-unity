@@ -94,13 +94,14 @@ export default function Home() {
 
         <div className="mt-3" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
           {ACTIVATIONS.map((a) => (
-            <div key={a.id} className="card">
+            <Link key={a.id} href={"/portal/" + a.id} className="card" style={{ display: "block", textDecoration: "none", color: "inherit" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
                 <h3 style={{ fontSize: "1.15rem" }}>{a.name}</h3>
                 <span className="muted">{a.time}</span>
               </div>
               <p className="mt-1">{a.desc}</p>
-            </div>
+              <p className="label mt-2" style={{ fontSize: "0.85rem", color: "var(--sun-yellow)" }}>Step in &rarr;</p>
+            </Link>
           ))}
         </div>
 
