@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ROLES } from "@/lib/config";
 import { EVENT } from "@/lib/config";
 import { CONTRACTS } from "@/lib/contracts";
+import FlagBreak from "@/components/FlagBreak";
 
 export default function SubmitForm({ role }) {
   const r = ROLES[role];
@@ -123,7 +124,7 @@ export default function SubmitForm({ role }) {
       {avail && !soldOut && (
         <p className="center muted mt-1">{avail.remaining} of {avail.cap} spots left</p>
       )}
-      <div className="ribbon mt-2 mb-2" />
+      <FlagBreak />
 
       {soldOut ? (
         <div className="card center mt-3">
