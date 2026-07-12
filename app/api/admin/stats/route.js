@@ -15,7 +15,8 @@ export async function GET(request) {
     .from("tickets")
     .select("tier, status")
     .neq("status", "void");
-  const { data: orders } = await db.from("orders").select("name, email, tier, amount, quantity, source, created_at");
+  const { data: ordersRaw } = await db.from("orders").select("id, name, email, tier, amount, quantity, source, created_at, archived");
+  const orders = (ordersRaw || []).filter((o) => !o.archived);
 
   const byTier = Object.values(TIERS).map((t) => {
     const sold = (tickets || []).filter((x) => x.tier === t.id).length;
@@ -62,6 +63,7 @@ export async function GET(request) {
   const submissions = paidSubs.map((s) => {
     const d = s.details || {};
     return {
+      id: s.id,
       ref: "#" + String(s.id).slice(0, 8).toUpperCase(),
       role: s.type,
       roleLabel: (ROLES[s.type] || {}).label || s.type,
@@ -97,6 +99,7 @@ export async function GET(request) {
     .slice()
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     .map((o) => ({
+      id: o.id,
       name: o.name || "",
       email: o.email || "",
       tier: (TIERS[o.tier] || {}).name || o.tier,
