@@ -27,6 +27,16 @@ export default function AdminPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passcode]);
 
+  async function voidItem(kind, id, label) {
+    if (!window.confirm("Remove " + label + "? This frees the spot and hides it from the counts.")) return;
+    await fetch("/api/admin/void", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-admin-passcode": passcode },
+      body: JSON.stringify({ kind, id }),
+    });
+    load();
+  }
+
   async function download(type) {
     const res = await fetch("/api/admin/export?type=" + type, { headers });
     const blob = await res.blob();
@@ -108,6 +118,7 @@ export default function AdminPage() {
                       <th style={{ padding: 8 }}>Tier</th>
                       <th style={{ padding: 8 }}>Qty</th>
                       <th style={{ padding: 8 }}>Source</th>
+                      <th style={{ padding: 8 }}></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -118,6 +129,9 @@ export default function AdminPage() {
                         <td style={{ padding: 8 }}>{b.tier}</td>
                         <td style={{ padding: 8 }}>{b.quantity}</td>
                         <td style={{ padding: 8 }}>{b.source || "-"}</td>
+                        <td style={{ padding: 8 }}>
+                          <button onClick={() => voidItem("order", b.id, b.name + " - " + b.tier)} style={{ background: "var(--ribbon-red)", color: "#fff", border: "none", borderRadius: 8, padding: "4px 12px", cursor: "pointer", fontWeight: 700 }}>Void</button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -150,6 +164,7 @@ export default function AdminPage() {
                         <th style={{ padding: 8 }}>Sale</th>
                         <th style={{ padding: 8 }}>Images</th>
                         <th style={{ padding: 8 }}>In</th>
+                        <th style={{ padding: 8 }}></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -175,6 +190,9 @@ export default function AdminPage() {
                             ))}
                           </td>
                           <td style={{ padding: 8 }}>{s.checkedIn ? "✓" : ""}</td>
+                          <td style={{ padding: 8 }}>
+                            <button onClick={() => voidItem("submission", s.id, s.name + " - " + s.roleLabel)} style={{ background: "var(--ribbon-red)", color: "#fff", border: "none", borderRadius: 8, padding: "4px 12px", cursor: "pointer", fontWeight: 700 }}>Remove</button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
