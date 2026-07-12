@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 // POST { tierId, quantity, name, email } -> Stripe Checkout session URL
 export async function POST(request) {
   try {
-    const { tierId, quantity = 1, name = "", email = "" } = await request.json();
+    const { tierId, quantity = 1, name = "", email = "", source = "" } = await request.json();
     const tier = TIERS[tierId];
     const qty = Math.max(1, Math.min(10, parseInt(quantity, 10) || 1));
     if (!tier) {
@@ -48,7 +48,7 @@ export async function POST(request) {
           },
         },
       ],
-      metadata: { tierId, quantity: String(qty), buyer_name: name },
+      metadata: { tierId, quantity: String(qty), buyer_name: name, source: source || "" },
       success_url: base + "/tickets/success?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: base + "/tickets",
     });
