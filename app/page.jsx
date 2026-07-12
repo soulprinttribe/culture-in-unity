@@ -84,7 +84,7 @@ export default function Home() {
       {/* THE JOURNEY (Phase 1 preview; full scroll-scenes = Phase 2) */}
       <section id="journey" className="container" style={{ paddingTop: 40, paddingBottom: 40 }}>
         <FlagBreak />
-        <h2 className="center" style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
+        <h2 className="center" style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)", fontFamily: "var(--font-label), Impact, 'Arial Narrow Bold', sans-serif" }}>
           One day. Nine portals.
         </h2>
         <p className="center mt-1 muted" style={{ maxWidth: 620, margin: "8px auto 0" }}>
