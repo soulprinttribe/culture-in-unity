@@ -154,6 +154,32 @@ export default function AdminPage() {
             </>
           )}
 
+          {stats.sources && stats.sources.length > 0 && (
+            <>
+              <h3 className="mt-4" style={{ fontSize: "1.2rem" }}>Where people came from</h3>
+              <div className="card mt-2" style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                  <thead>
+                    <tr style={{ textAlign: "left", borderBottom: "2px solid rgba(255,255,255,0.4)" }}>
+                      <th style={{ padding: 8 }}>Source</th>
+                      <th style={{ padding: 8 }}>Tickets</th>
+                      <th style={{ padding: 8 }}>Artists / Vendors</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {stats.sources.map((s) => (
+                      <tr key={s.source} style={{ borderBottom: "1px solid rgba(255,255,255,0.2)" }}>
+                        <td style={{ padding: 8 }}><strong>{s.source}</strong></td>
+                        <td style={{ padding: 8 }}>{s.tickets}</td>
+                        <td style={{ padding: 8 }}>{s.submissions}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+
           <div className="mt-3" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <button className="btn" onClick={() => download("doorlist")}>Door / will-call list (CSV)</button>
             <button className="btn secondary" onClick={() => download("subscribers")}>Subscribers (CSV)</button>
