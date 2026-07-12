@@ -55,6 +55,7 @@ export async function POST(request) {
     const socials = (form.get("socials") || "").toString().trim();
     const description = (form.get("description") || "").toString().trim();
     const contractName = (form.get("contractName") || "").toString().trim();
+    const source = (form.get("source") || "").toString().trim();
     let details = {};
     try { details = JSON.parse((form.get("details") || "{}").toString()); } catch (e) { details = {}; }
 
@@ -97,6 +98,7 @@ export async function POST(request) {
         contract_name: contractName,
         contract_signed_at: new Date().toISOString(),
         role_color: r.color,
+        source,
         status: "pending",
         fee_paid: false,
       })
