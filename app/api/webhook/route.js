@@ -56,6 +56,7 @@ export async function POST(request) {
       tier: tierId,
       quantity: qty,
       amount: session.amount_total,
+      source: (session.metadata && session.metadata.source) || "",
     })
     .select()
     .single();
