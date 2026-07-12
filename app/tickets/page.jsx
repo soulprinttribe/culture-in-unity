@@ -6,6 +6,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { EVENT } from "@/lib/config";
+import FlagBreak from "@/components/FlagBreak";
 
 export default function TicketsPage() {
   const [tiers, setTiers] = useState(null);
@@ -57,7 +58,7 @@ export default function TicketsPage() {
         <strong>{EVENT.dateLabel} · {EVENT.timeLabel}</strong><br />
         {EVENT.venueName} · {EVENT.venueAddress}
       </p>
-      <div className="ribbon mt-2 mb-2" />
+      <FlagBreak />
 
       {!tiers && !error && <p className="center mt-3">Loading tickets...</p>}
 
