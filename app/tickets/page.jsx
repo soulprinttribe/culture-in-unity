@@ -59,7 +59,7 @@ export default function TicketsPage() {
         <strong>{EVENT.dateLabel} · {EVENT.timeLabel}</strong><br />
         {EVENT.venueName} · {EVENT.venueAddress}
       </p>
-      <FlagBreak />
+      <FlagBreak canvasStyle={{ height: 90 }} />
 
       {!tiers && !error && <p className="center mt-3">Loading tickets...</p>}
 
