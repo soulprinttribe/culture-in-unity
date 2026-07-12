@@ -126,7 +126,7 @@ export default function SubmitForm({ role }) {
       {avail && !soldOut && (
         <p className="center muted mt-1">{avail.remaining} of {avail.cap} spots left</p>
       )}
-      <FlagBreak canvasStyle={{ height: 100 }} />
+      <FlagBreak canvasStyle={{ height: 150 }} />
 
       {soldOut ? (
         <div className="card center mt-3">
