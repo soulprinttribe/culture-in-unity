@@ -36,6 +36,7 @@ export default function SubmitForm({ role }) {
   const [boothNeeds, setBoothNeeds] = useState("");
   const [power, setPower] = useState("no");
 
+  const [source, setSource] = useState("");
   const [agree, setAgree] = useState(false);
   const [sign, setSign] = useState("");
 
@@ -94,6 +95,7 @@ export default function SubmitForm({ role }) {
       fd.append("description", description.trim());
       fd.append("details", JSON.stringify(details));
       fd.append("contractName", sign.trim());
+      fd.append("source", source);
       images.forEach((f) => fd.append("images", f));
 
       const res = await fetch("/api/submit", { method: "POST", body: fd });
@@ -124,7 +126,7 @@ export default function SubmitForm({ role }) {
       {avail && !soldOut && (
         <p className="center muted mt-1">{avail.remaining} of {avail.cap} spots left</p>
       )}
-      <FlagBreak />
+      <FlagBreak canvasStyle={{ height: 64 }} />
 
       {soldOut ? (
         <div className="card center mt-3">
@@ -141,6 +143,16 @@ export default function SubmitForm({ role }) {
 
           <label htmlFor="socials">Social handle(s)</label>
           <input id="socials" value={socials} onChange={(e) => setSocials(e.target.value)} placeholder="@yourhandle (IG, etc.)" />
+
+          <label htmlFor="source">How did you hear about us?</label>
+          <select id="source" value={source} onChange={(e) => setSource(e.target.value)}>
+            <option value="">Select one (optional)</option>
+            <option>Flyer / QR code</option>
+            <option>Instagram</option>
+            <option>Social media (stories, posts)</option>
+            <option>Word of mouth</option>
+            <option>Other</option>
+          </select>
 
           {isArtist ? (
             <>

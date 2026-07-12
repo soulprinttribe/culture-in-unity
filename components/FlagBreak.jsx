@@ -2,10 +2,12 @@
 
 // Flag garland page-break (flyer motif: flags of many cultures draped
 // across the screen). Auto-crops the PNG's transparent padding.
+// Optional props: maxWidth (container cap) and canvasStyle (merged onto the
+// canvas - e.g. a fixed height to stretch the garland wider and shorter).
 
 import { useEffect, useRef } from "react";
 
-export default function FlagBreak() {
+export default function FlagBreak({ maxWidth = 760, canvasStyle }) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -39,10 +41,10 @@ export default function FlagBreak() {
   }, []);
 
   return (
-    <div aria-hidden style={{ width: "100%", maxWidth: 760, margin: "20px auto", overflow: "hidden" }}>
+    <div aria-hidden style={{ width: "100%", maxWidth: maxWidth, margin: "20px auto", overflow: "hidden" }}>
       <canvas
         ref={ref}
-        style={{ width: "100%", height: "auto", display: "block", filter: "drop-shadow(0 8px 14px rgba(26,26,80,0.35))" }}
+        style={{ width: "100%", height: "auto", display: "block", filter: "drop-shadow(0 8px 14px rgba(26,26,80,0.35))", ...canvasStyle }}
       />
     </div>
   );
