@@ -15,7 +15,7 @@ export async function GET(request) {
     .from("tickets")
     .select("tier, status")
     .neq("status", "void");
-  const { data: orders } = await db.from("orders").select("tier, amount, quantity");
+  const { data: orders } = await db.from("orders").select("tier, amount, quantity, source");
 
   const byTier = Object.values(TIERS).map((t) => {
     const sold = (tickets || []).filter((x) => x.tier === t.id).length;
@@ -40,7 +40,7 @@ export async function GET(request) {
   // --- Participant submissions ---
   const { data: subs } = await db
     .from("submissions")
-    .select("id, type, name, email, socials, description, details, file_urls, fee_paid, checked_in, created_at")
+    .select("id, type, name, email, socials, description, details, file_urls, fee_paid, checked_in, created_at, source")
     .order("created_at", { ascending: false });
   const paidSubs = (subs || []).filter((s) => s.fee_paid);
 
@@ -78,7 +78,23 @@ export async function GET(request) {
     };
   });
 
+  const sourceMap = {};
+  (orders || []).forEach((o) => {
+    const key = (o.source && o.source.trim()) || "Not specified";
+    if (!sourceMap[key]) sourceMap[key] = { source: key, tickets: 0, submissions: 0 };
+    sourceMap[key].tickets += o.quantity || 1;
+  });
+  paidSubs.forEach((sb) => {
+    const key = (sb.source && sb.source.trim()) || "Not specified";
+    if (!sourceMap[key]) sourceMap[key] = { source: key, tickets: 0, submissions: 0 };
+    sourceMap[key].submissions += 1;
+  });
+  const sources = Object.values(sourceMap).sort(
+    (a, b) => (b.tickets + b.submissions) - (a.tickets + a.submissions)
+  );
+
   return NextResponse.json({
+    sources,
     byTier,
     totals: {
       sold: (tickets || []).length,
