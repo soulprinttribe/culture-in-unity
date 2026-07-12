@@ -29,12 +29,18 @@ export default function AdminPage() {
 
   async function voidItem(kind, id, label) {
     if (!window.confirm("Remove " + label + "? This frees the spot and hides it from the counts.")) return;
-    await fetch("/api/admin/void", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-admin-passcode": passcode },
-      body: JSON.stringify({ kind, id }),
-    });
-    load();
+    try {
+      const res = await fetch("/api/admin/void", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-admin-passcode": passcode },
+        body: JSON.stringify({ kind, id }),
+      });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) { alert("Could not remove it: " + (d.error || ("status " + res.status))); return; }
+      await load();
+    } catch (e) {
+      alert("Error removing: " + e.message);
+    }
   }
 
   async function download(type) {
@@ -201,6 +207,28 @@ export default function AdminPage() {
               ) : (
                 <p className="muted mt-2">No paid artist or vendor submissions yet.</p>
               )}
+            </>
+          )}
+
+          {stats.byRole && (
+            <>
+              <h3 className="mt-4" style={{ fontSize: "1.2rem" }}>Revenue</h3>
+              <div className="mt-2" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12 }}>
+                <div className="card center">
+                  <div className="label" style={{ fontSize: "1.5rem" }}>${(stats.totals.revenue / 100).toLocaleString()}</div>
+                  <div className="muted">Ticket sales</div>
+                </div>
+                {stats.byRole.map((r) => (
+                  <div key={r.id} className="card center">
+                    <div className="label" style={{ fontSize: "1.5rem", color: r.color }}>${(r.revenue / 100).toLocaleString()}</div>
+                    <div className="muted">{r.label} fees</div>
+                  </div>
+                ))}
+                <div className="card center" style={{ borderColor: "var(--sun-yellow)", borderWidth: 3 }}>
+                  <div className="label" style={{ fontSize: "1.7rem" }}>${((stats.totals.revenue + stats.byRole.reduce((s, r) => s + r.revenue, 0)) / 100).toLocaleString()}</div>
+                  <div className="muted">Total collected</div>
+                </div>
+              </div>
             </>
           )}
 
