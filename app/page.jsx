@@ -92,9 +92,21 @@ export default function Home() {
           Tap any portal below to step inside. Times will settle as the run-of-show is finalized.
         </p>
 
-        <div className="mt-3" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 12 }}>
-          {ACTIVATIONS.map((a) => (
+        <div className="mt-3" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))", gap: 12 }}>
+          {ACTIVATIONS.filter((a) => a.time !== "All day").map((a) => (
             <Link key={a.id} href={"/portal/" + a.id} className="card" style={{ display: "block", textDecoration: "none", color: "inherit", padding: "16px 18px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
+                <h3 style={{ fontSize: "1.05rem" }}>{a.name}</h3>
+                <span className="muted" style={{ fontSize: "0.85rem", whiteSpace: "nowrap" }}>{a.time}</span>
+              </div>
+              <p className="muted mt-1" style={{ fontSize: "0.9rem", margin: "6px 0 0" }}>{a.mini || a.desc}</p>
+              <p className="label mt-2" style={{ fontSize: "0.8rem", color: "var(--sun-yellow)", margin: "10px 0 0" }}>Tap to explore &rarr;</p>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-2" style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          {ACTIVATIONS.filter((a) => a.time === "All day").map((a) => (
+            <Link key={a.id} href={"/portal/" + a.id} className="card" style={{ display: "block", textDecoration: "none", color: "inherit", padding: "16px 18px", width: "100%", maxWidth: 260 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
                 <h3 style={{ fontSize: "1.05rem" }}>{a.name}</h3>
                 <span className="muted" style={{ fontSize: "0.85rem", whiteSpace: "nowrap" }}>{a.time}</span>
