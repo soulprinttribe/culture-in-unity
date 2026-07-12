@@ -14,6 +14,7 @@ export default function TicketsPage() {
   const [qty, setQty] = useState(1);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [source, setSource] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -39,7 +40,7 @@ export default function TicketsPage() {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tierId: selected, quantity: qty, name, email }),
+        body: JSON.stringify({ tierId: selected, quantity: qty, name, email, source }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Checkout failed.");
@@ -114,6 +115,16 @@ export default function TicketsPage() {
 
           <label htmlFor="email">Email (your QR ticket lands here)</label>
           <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" />
+
+          <label htmlFor="source">How did you hear about us?</label>
+          <select id="source" value={source} onChange={(e) => setSource(e.target.value)}>
+            <option value="">Select one (optional)</option>
+            <option>Flyer / QR code</option>
+            <option>Instagram</option>
+            <option>Social media (stories, posts)</option>
+            <option>Word of mouth</option>
+            <option>Other</option>
+          </select>
 
           {error && (
             <p className="mt-2" style={{ background: "var(--ribbon-red)", padding: "10px 14px", borderRadius: 12, fontWeight: 600 }}>
