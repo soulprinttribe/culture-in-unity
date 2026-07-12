@@ -96,6 +96,36 @@ export default function AdminPage() {
             </table>
           </div>
 
+          {stats.buyers && stats.buyers.length > 0 && (
+            <>
+              <h3 className="mt-4" style={{ fontSize: "1.2rem" }}>Ticket buyers ({stats.buyers.length})</h3>
+              <div className="card mt-2" style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.92rem" }}>
+                  <thead>
+                    <tr style={{ textAlign: "left", borderBottom: "2px solid rgba(255,255,255,0.4)" }}>
+                      <th style={{ padding: 8 }}>Name</th>
+                      <th style={{ padding: 8 }}>Email</th>
+                      <th style={{ padding: 8 }}>Tier</th>
+                      <th style={{ padding: 8 }}>Qty</th>
+                      <th style={{ padding: 8 }}>Source</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {stats.buyers.map((b, i) => (
+                      <tr key={i} style={{ borderBottom: "1px solid rgba(255,255,255,0.2)" }}>
+                        <td style={{ padding: 8 }}><strong>{b.name}</strong></td>
+                        <td style={{ padding: 8 }}>{b.email}</td>
+                        <td style={{ padding: 8 }}>{b.tier}</td>
+                        <td style={{ padding: 8 }}>{b.quantity}</td>
+                        <td style={{ padding: 8 }}>{b.source || "-"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+
           {stats.byRole && (
             <>
               <h3 className="mt-4" style={{ fontSize: "1.2rem" }}>Artists &amp; Vendors</h3>
@@ -139,7 +169,9 @@ export default function AdminPage() {
                           <td style={{ padding: 8 }}>{s.forSale ? (s.price || "Yes") : "-"}</td>
                           <td style={{ padding: 8 }}>
                             {(s.images || []).map((u, i) => (
-                              <a key={i} href={u} target="_blank" rel="noreferrer" style={{ marginRight: 6 }}>{i + 1}</a>
+                              <a key={i} href={u} target="_blank" rel="noreferrer">
+                                <img src={u} alt="" style={{ width: 46, height: 46, objectFit: "cover", borderRadius: 6, marginRight: 6, border: "1px solid rgba(255,255,255,0.45)" }} />
+                              </a>
                             ))}
                           </td>
                           <td style={{ padding: 8 }}>{s.checkedIn ? "✓" : ""}</td>
