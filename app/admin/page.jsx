@@ -22,6 +22,7 @@ export default function AdminPage() {
   useEffect(() => {
     if (!passcode) return;
     load();
+    loadCodes();
     const t = setInterval(load, 30000);
     return () => clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -41,6 +42,25 @@ export default function AdminPage() {
     } catch (e) {
       alert("Error removing: " + e.message);
     }
+  }
+
+  const [codes, setCodes] = useState(null);
+  async function loadCodes() {
+    try {
+      const res = await fetch("/api/admin/codes?t=" + Date.now(), { headers, cache: "no-store" });
+      const d = await res.json();
+      setCodes(d.codes || []);
+    } catch (e) {}
+  }
+  async function setupCodes() {
+    if (!window.confirm("Create / update the cast & extras discount codes in Stripe?")) return;
+    try {
+      const res = await fetch("/api/admin/setup-codes", { method: "POST", headers: { "Content-Type": "application/json", "x-admin-passcode": passcode } });
+      const d = await res.json();
+      if (!res.ok || d.ok === false) { alert("Error: " + (d.error || ("status " + res.status))); return; }
+      alert("Codes updated:\n\n" + (d.results || []).join("\n"));
+      loadCodes();
+    } catch (e) { alert("Error: " + e.message); }
   }
 
   async function download(type) {
@@ -256,6 +276,38 @@ export default function AdminPage() {
                 </table>
               </div>
             </>
+          )}
+
+          <h3 className="mt-4" style={{ fontSize: "1.2rem" }}>Discount codes</h3>
+          <div className="mt-2" style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+            <button className="btn" onClick={setupCodes}>Create / update cast codes</button>
+            <span className="muted">Cast = 50% off &middot; Extras = 20% off &middot; single-use each</span>
+          </div>
+          {codes && codes.length > 0 ? (
+            <div className="card mt-2" style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.92rem" }}>
+                <thead>
+                  <tr style={{ textAlign: "left", borderBottom: "2px solid rgba(255,255,255,0.4)" }}>
+                    <th style={{ padding: 8 }}>Code</th>
+                    <th style={{ padding: 8 }}>Discount</th>
+                    <th style={{ padding: 8 }}>Redeemed</th>
+                    <th style={{ padding: 8 }}>Active</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {codes.map((c) => (
+                    <tr key={c.code} style={{ borderBottom: "1px solid rgba(255,255,255,0.2)" }}>
+                      <td style={{ padding: 8 }}><strong>{c.code}</strong></td>
+                      <td style={{ padding: 8 }}>{c.off}</td>
+                      <td style={{ padding: 8 }}>{c.redeemed}{c.max ? " / " + c.max : ""}</td>
+                      <td style={{ padding: 8 }}>{c.active ? "Yes" : "No"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="muted mt-2">No codes yet - click "Create / update cast codes" to generate them.</p>
           )}
 
           <div className="mt-3" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
