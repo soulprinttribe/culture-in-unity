@@ -9,7 +9,8 @@ const CODES = [
   ["EZRA", "cast50"], ["AMARADAZE", "cast50"], ["AXIOM", "cast50"], ["YAXIN", "cast50"],
   ["IDRIS", "cast50"], ["CATO", "cast50"], ["REMI", "cast50"], ["ZURI", "cast50"],
   ["MAMAASHA", "cast50"], ["GATEKEEPER", "cast50"], ["KAYALUCERO", "cast50"], ["KAYANEOSHA", "cast50"],
-  ["ELI", "extras20"], ["JAH", "extras20"], ["AB", "extras20"], ["BRI", "extras20"],
+  ["KHEPRI", "cast50"],
+  ["ELI", "extras20"], ["JAH", "extras20"], ["AB", "extras20"], ["BRI", "extras20"], ["MK", "extras20"], ["SAMMY", "extras20"],
 ];
 
 async function getOrCreateCoupon(s, key) {
