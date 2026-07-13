@@ -119,5 +119,5 @@ export async function GET(request) {
     },
     byRole,
     submissions,
-  });
+  }, { headers: { "Cache-Control": "no-store, max-age=0" } });
 }
