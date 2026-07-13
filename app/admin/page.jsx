@@ -22,7 +22,7 @@ export default function AdminPage() {
   useEffect(() => {
     if (!passcode) return;
     load();
-    loadCodes();
+    syncCodes();
     const t = setInterval(load, 30000);
     return () => clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,6 +51,13 @@ export default function AdminPage() {
       const d = await res.json();
       setCodes(d.codes || []);
     } catch (e) {}
+  }
+  // auto-create any newly-added codes, then show the live list
+  async function syncCodes() {
+    try {
+      await fetch("/api/admin/setup-codes", { method: "POST", headers: { "Content-Type": "application/json", "x-admin-passcode": passcode } });
+    } catch (e) {}
+    loadCodes();
   }
   async function setupCodes() {
     if (!window.confirm("Create / update the cast & extras discount codes in Stripe?")) return;
