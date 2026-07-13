@@ -13,7 +13,7 @@ export default function AdminPage() {
   const headers = { "x-admin-passcode": passcode };
 
   async function load() {
-    const res = await fetch("/api/admin/stats", { headers });
+    const res = await fetch("/api/admin/stats?t=" + Date.now(), { headers, cache: "no-store" });
     if (res.status === 401) return setAuthFailed(true);
     setStats(await res.json());
     setAuthFailed(false);
