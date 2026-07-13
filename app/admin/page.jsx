@@ -259,6 +259,7 @@ export default function AdminPage() {
           )}
 
           <div className="mt-3" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <button className="btn" onClick={() => load()}>&#8635; Refresh data</button>
             <button className="btn" onClick={() => download("doorlist")}>Door / will-call list (CSV)</button>
             <button className="btn secondary" onClick={() => download("subscribers")}>Subscribers (CSV)</button>
             <a className="btn secondary" href="/scan">Open door check-in</a>
