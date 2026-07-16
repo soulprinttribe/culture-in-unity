@@ -237,6 +237,43 @@ export default function AdminPage() {
             </>
           )}
 
+          {stats.pending && stats.pending.length > 0 && (
+            <>
+              <h3 className="mt-4" style={{ fontSize: "1.2rem" }}>Started an application - not paid yet ({stats.pending.length})</h3>
+              <p className="muted mt-1">These filled out the artist/vendor form but haven&apos;t completed the fee, so their spot isn&apos;t confirmed. Reach out to nudge them - they&apos;re interested.</p>
+              <div className="card mt-2" style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.92rem" }}>
+                  <thead>
+                    <tr style={{ textAlign: "left", borderBottom: "2px solid rgba(255,255,255,0.4)" }}>
+                      <th style={{ padding: 8 }}>Role</th>
+                      <th style={{ padding: 8 }}>Name</th>
+                      <th style={{ padding: 8 }}>Email</th>
+                      <th style={{ padding: 8 }}>Socials</th>
+                      <th style={{ padding: 8 }}>Started</th>
+                      <th style={{ padding: 8 }}></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {stats.pending.map((p) => (
+                      <tr key={p.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.2)" }}>
+                        <td style={{ padding: 8 }}>
+                          <span style={{ background: p.color, color: "#fff", padding: "2px 8px", borderRadius: 999, fontWeight: 700, fontSize: "0.8rem", textTransform: "uppercase" }}>{p.roleLabel}</span>
+                        </td>
+                        <td style={{ padding: 8 }}><strong>{p.name}</strong></td>
+                        <td style={{ padding: 8 }}><a href={"mailto:" + p.email} style={{ color: "var(--sun-yellow)" }}>{p.email}</a></td>
+                        <td style={{ padding: 8 }}>{p.socials || "-"}</td>
+                        <td style={{ padding: 8 }}>{p.createdAt ? new Date(p.createdAt).toLocaleDateString() : "-"}</td>
+                        <td style={{ padding: 8 }}>
+                          <button onClick={() => voidItem("submission", p.id, p.name + " - " + p.roleLabel)} style={{ background: "var(--ribbon-red)", color: "#fff", border: "none", borderRadius: 8, padding: "4px 12px", cursor: "pointer", fontWeight: 700 }}>Remove</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+
           {stats.byRole && (
             <>
               <h3 className="mt-4" style={{ fontSize: "1.2rem" }}>Revenue</h3>
