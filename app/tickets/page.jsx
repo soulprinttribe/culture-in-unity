@@ -15,6 +15,7 @@ export default function TicketsPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [source, setSource] = useState("");
+  const [referral, setReferral] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -29,6 +30,16 @@ export default function TicketsPage() {
       .catch(() => setError("Could not load ticket availability - refresh to retry."));
   }, []);
 
+  // Optional convenience: a partner can share /tickets?ref=VIBEFEST and it pre-fills
+  // the code. It stays visible and editable, so attribution is still deliberate.
+  useEffect(() => {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      const r = p.get("ref") || p.get("code");
+      if (r) setReferral(r.toUpperCase().replace(/[^A-Z0-9]/g, ""));
+    } catch (e) {}
+  }, []);
+
   async function buy(e) {
     e.preventDefault();
     setError("");
@@ -36,11 +47,15 @@ export default function TicketsPage() {
     if (!name.trim()) return setError("Please tell us your name - it goes on your ticket.");
     if (!/^\S+@\S+\.\S+$/.test(email)) return setError("Please enter a valid email - your QR ticket is sent there.");
     setBusy(true);
+    // A typed partner/referral code is the strongest attribution signal, so it wins
+    // over the general "how did you hear" dropdown when present.
+    const code = referral.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+    const attribution = code ? code : source;
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tierId: selected, quantity: qty, name, email, source }),
+        body: JSON.stringify({ tierId: selected, quantity: qty, name, email, source: attribution }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Checkout failed.");
@@ -125,6 +140,20 @@ export default function TicketsPage() {
             <option>Word of mouth</option>
             <option>Other</option>
           </select>
+
+          <label htmlFor="referral">Partner / referral code (optional)</label>
+          <input
+            id="referral"
+            value={referral}
+            onChange={(e) => setReferral(e.target.value.toUpperCase())}
+            placeholder="e.g. VIBEFEST"
+            autoCapitalize="characters"
+            autoCorrect="off"
+            spellCheck={false}
+          />
+          <p className="muted" style={{ marginTop: -6, fontSize: "0.85rem" }}>
+            Came through a partner or a tribe member? Enter their code so we can credit them.
+          </p>
 
           {error && (
             <p className="mt-2" style={{ background: "var(--ribbon-red)", padding: "10px 14px", borderRadius: 12, fontWeight: 600 }}>
