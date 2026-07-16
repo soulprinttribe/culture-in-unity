@@ -41,9 +41,11 @@ export async function GET(request) {
   // --- Participant submissions ---
   const { data: subs } = await db
     .from("submissions")
-    .select("id, type, name, email, socials, description, details, file_urls, fee_paid, checked_in, created_at, source")
+    .select("id, type, name, email, socials, description, details, file_urls, fee_paid, status, checked_in, created_at, source")
     .order("created_at", { ascending: false });
   const paidSubs = (subs || []).filter((s) => s.fee_paid);
+  // people who started an application but have not paid the fee (and weren't voided)
+  const pendingSubs = (subs || []).filter((s) => !s.fee_paid && s.status !== "void");
 
   const byRole = Object.values(ROLES).map((r) => {
     const list = paidSubs.filter((s) => s.type === r.id);
@@ -79,6 +81,18 @@ export async function GET(request) {
       checkedIn: !!s.checked_in,
     };
   });
+
+  const pending = pendingSubs.map((s) => ({
+    id: s.id,
+    role: s.type,
+    roleLabel: (ROLES[s.type] || {}).label || s.type,
+    feeLabel: (ROLES[s.type] || {}).feeLabel || "",
+    color: (ROLES[s.type] || {}).color || "#4b2fd0",
+    name: s.name,
+    email: s.email,
+    socials: s.socials || "",
+    createdAt: s.created_at,
+  }));
 
   const sourceMap = {};
   (orders || []).forEach((o) => {
@@ -119,5 +133,6 @@ export async function GET(request) {
     },
     byRole,
     submissions,
+    pending,
   }, { headers: { "Cache-Control": "no-store, max-age=0" } });
 }
