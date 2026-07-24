@@ -8,6 +8,15 @@ import Link from "next/link";
 import { EVENT } from "@/lib/config";
 import FlagBreak from "@/components/FlagBreak";
 
+// Show ONLY Early Bird while it still has tickets. Once Early Bird sells out,
+// reveal the other tiers (GA, GA + Food).
+function visibleTiers(list) {
+  if (!list || !list.length) return [];
+  const eb = list.find((t) => t.id === "early_bird");
+  if (eb && eb.remaining > 0) return [eb];
+  return list.filter((t) => t.id !== "early_bird");
+}
+
 export default function TicketsPage() {
   const [tiers, setTiers] = useState(null);
   const [selected, setSelected] = useState(null);
@@ -24,7 +33,7 @@ export default function TicketsPage() {
       .then((r) => r.json())
       .then((d) => {
         setTiers(d.tiers);
-        const firstAvailable = d.tiers.find((t) => t.remaining > 0);
+        const firstAvailable = visibleTiers(d.tiers).find((t) => t.remaining > 0);
         if (firstAvailable) setSelected(firstAvailable.id);
       })
       .catch(() => setError("Could not load ticket availability - refresh to retry."));
@@ -66,6 +75,8 @@ export default function TicketsPage() {
     }
   }
 
+  const shown = visibleTiers(tiers);
+
   return (
     <main className="container" style={{ paddingTop: 40, paddingBottom: 80, maxWidth: 640 }}>
       <p className="center"><Link href="/" className="muted">back to the portal</Link></p>
@@ -81,7 +92,7 @@ export default function TicketsPage() {
       {tiers && (
         <form onSubmit={buy}>
           <div style={{ display: "grid", gap: 14 }}>
-            {tiers.map((t) => {
+            {shown.map((t) => {
               const soldOut = t.remaining <= 0;
               const active = selected === t.id;
               return (
