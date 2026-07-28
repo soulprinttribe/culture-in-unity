@@ -9,11 +9,12 @@ import Link from "next/link";
 import { ROLES } from "@/lib/config";
 import { EVENT } from "@/lib/config";
 import { CONTRACTS } from "@/lib/contracts";
-import FlagBreak from "@/components/FlagBreak";
 
 export default function SubmitForm({ role }) {
   const r = ROLES[role];
   const isArtist = role === "artist";
+  const isPerformer = role === "perform";
+  const isFree = r.fee === 0;
 
   const [avail, setAvail] = useState(null);
   const [step, setStep] = useState(1);
@@ -36,7 +37,9 @@ export default function SubmitForm({ role }) {
   const [boothNeeds, setBoothNeeds] = useState("");
   const [power, setPower] = useState("no");
 
-  const [source, setSource] = useState("");
+  const [musicLink, setMusicLink] = useState("");
+  const [setLength, setSetLength] = useState("10 min");
+
   const [agree, setAgree] = useState(false);
   const [sign, setSign] = useState("");
 
@@ -52,10 +55,19 @@ export default function SubmitForm({ role }) {
   }
 
   function validateDetails() {
-    if (!name.trim()) return "Please enter your " + (isArtist ? "name" : "brand / name") + ".";
+    if (!name.trim()) return "Please enter your " + (isArtist || isPerformer ? "name" : "brand / name") + ".";
     if (!/^\S+@\S+\.\S+$/.test(email)) return "Please enter a valid email - your pass is sent there.";
     if (isArtist && !title.trim()) return "Please give your work a title - it becomes your wall card.";
-    if (!description.trim()) return isArtist ? "Please describe your work." : "Please tell us what you sell.";
+    if (!description.trim()) {
+      if (isArtist) return "Please describe your work.";
+      if (isPerformer) return "Please tell us about your sound.";
+      return "Please tell us what you sell.";
+    }
+    if (isPerformer) {
+      if (!musicLink.trim()) return "Please paste a link to your music so we can hear it.";
+      if (!/^https?:\/\/\S+\.\S+/.test(musicLink.trim())) return "Please paste a full link starting with https://";
+      return "";
+    }
     if (images.length < 1) return "Please upload at least one image.";
     return "";
   }
@@ -76,16 +88,21 @@ export default function SubmitForm({ role }) {
     setError("");
     setBusy(true);
     try {
-      const details = isArtist
-        ? {
-            title: title.trim(),
-            medium: medium.trim(),
-            format,
-            dimensions: dimensions.trim(),
-            forSale: forSale === "yes",
-            price: forSale === "yes" ? price.trim() : "",
-          }
-        : { boothNeeds: boothNeeds.trim(), power: power === "yes" };
+      let details;
+      if (isArtist) {
+        details = {
+          title: title.trim(),
+          medium: medium.trim(),
+          format,
+          dimensions: dimensions.trim(),
+          forSale: forSale === "yes",
+          price: forSale === "yes" ? price.trim() : "",
+        };
+      } else if (isPerformer) {
+        details = { musicLink: musicLink.trim(), setLength };
+      } else {
+        details = { boothNeeds: boothNeeds.trim(), power: power === "yes" };
+      }
 
       const fd = new FormData();
       fd.append("role", role);
@@ -95,7 +112,6 @@ export default function SubmitForm({ role }) {
       fd.append("description", description.trim());
       fd.append("details", JSON.stringify(details));
       fd.append("contractName", sign.trim());
-      fd.append("source", source);
       images.forEach((f) => fd.append("images", f));
 
       const res = await fetch("/api/submit", { method: "POST", body: fd });
@@ -113,12 +129,14 @@ export default function SubmitForm({ role }) {
   return (
     <main className="container" style={{ paddingTop: 40, paddingBottom: 80, maxWidth: 640 }}>
       <p className="center"><Link href="/" className="muted">back to the portal</Link></p>
-      <h1 className="center" style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)", fontFamily: "var(--font-label), Impact, 'Arial Narrow Bold', sans-serif" }}>
-        {isArtist ? "Show Your Art" : "Become a Vendor"}
+      <h1 className="center" style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)" }}>
+        {isArtist ? "Show Your Art" : isPerformer ? "Perform Your Music" : "Become a Vendor"}
       </h1>
       <p className="center mt-1">
         {isArtist
           ? "Exhibit and sell your original work at CULTURE IN UNITY."
+          : isPerformer
+          ? "Share your sound on the stage at CULTURE IN UNITY."
           : "Bring your goods to the marketplace at CULTURE IN UNITY."}
         <br />
         <strong>{r.feeLabel}</strong> &middot; {EVENT.dateLabel} &middot; {EVENT.venueName}
@@ -126,7 +144,7 @@ export default function SubmitForm({ role }) {
       {avail && !soldOut && (
         <p className="center muted mt-1">{avail.remaining} of {avail.cap} spots left</p>
       )}
-      <FlagBreak canvasStyle={{ height: 150 }} />
+      <div className="ribbon mt-2 mb-2" />
 
       {soldOut ? (
         <div className="card center mt-3">
@@ -143,16 +161,6 @@ export default function SubmitForm({ role }) {
 
           <label htmlFor="socials">Social handle(s)</label>
           <input id="socials" value={socials} onChange={(e) => setSocials(e.target.value)} placeholder="@yourhandle (IG, etc.)" />
-
-          <label htmlFor="source">How did you hear about us?</label>
-          <select id="source" value={source} onChange={(e) => setSource(e.target.value)}>
-            <option value="">Select one (optional)</option>
-            <option>Flyer / QR code</option>
-            <option>Instagram</option>
-            <option>Social media (stories, posts)</option>
-            <option>Word of mouth</option>
-            <option>Other</option>
-          </select>
 
           {isArtist ? (
             <>
@@ -186,6 +194,23 @@ export default function SubmitForm({ role }) {
                 </>
               )}
             </>
+          ) : isPerformer ? (
+            <>
+              <label htmlFor="description">Tell us about your sound</label>
+              <textarea id="description" rows={4} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Genre, message, what you'd bring to the room." />
+
+              <label htmlFor="musicLink">Link to your music</label>
+              <input id="musicLink" value={musicLink} onChange={(e) => setMusicLink(e.target.value)} placeholder="SoundCloud, Spotify, Drive, YouTube, IG..." />
+              <p className="muted mt-1">Any public link works. Bring your track files with you on the day - we&apos;ll collect them at the welcome table.</p>
+
+              <label htmlFor="setLength">How long is your set?</label>
+              <select id="setLength" value={setLength} onChange={(e) => setSetLength(e.target.value)}>
+                <option>5 min</option>
+                <option>10 min</option>
+                <option>15 min</option>
+                <option>20 min</option>
+              </select>
+            </>
           ) : (
             <>
               <label htmlFor="description">What do you sell?</label>
@@ -202,7 +227,9 @@ export default function SubmitForm({ role }) {
             </>
           )}
 
-          <label htmlFor="images">Upload images {isArtist ? "of your work" : "of your products"} (1-5)</label>
+          <label htmlFor="images">
+            Upload images {isArtist ? "of your work" : isPerformer ? "of you performing" : "of your products"}{isPerformer ? " (optional)" : " (1-5)"}
+          </label>
           <input id="images" type="file" accept="image/*" multiple onChange={onFiles} style={{ padding: 10, background: "#fff" }} />
           {images.length > 0 && <p className="muted mt-1">{images.length} image{images.length > 1 ? "s" : ""} selected</p>}
 
@@ -221,7 +248,12 @@ export default function SubmitForm({ role }) {
 
           <label style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 14, fontWeight: 400 }}>
             <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} style={{ width: 20, height: 20, marginTop: 2 }} />
-            <span>I have read and agree to the {r.label} Participation Agreement, including arriving for 12 PM build-in and being set up by 1 PM.</span>
+            <span>
+              I have read and agree to the {r.label} Participation Agreement
+              {isPerformer
+                ? ", including arriving by 2 PM for sound and running order."
+                : ", including arriving for 1 PM build-in and being set up by 2 PM."}
+            </span>
           </label>
 
           {error && (
@@ -229,7 +261,9 @@ export default function SubmitForm({ role }) {
           )}
 
           <button type="submit" className="btn glow mt-3" style={{ width: "100%", fontSize: "1.2rem" }} disabled={busy}>
-            {busy ? "Opening secure checkout..." : "Agree & pay " + r.feeLabel}
+            {busy
+              ? isFree ? "Submitting..." : "Opening secure checkout..."
+              : isFree ? "Agree & submit" : "Agree & pay " + r.feeLabel}
           </button>
           <p className="center mt-2">
             <button type="button" className="muted" onClick={() => { setStep(1); setError(""); }} style={{ background: "none", border: "none", cursor: "pointer", textDecoration: "underline", color: "inherit" }}>
@@ -237,7 +271,9 @@ export default function SubmitForm({ role }) {
             </button>
           </p>
           <p className="muted center mt-1">
-            Secure checkout by Stripe. Your {r.feeLabel} fee is non-refundable, except if SOULPRINT revokes your spot for misalignment (full refund).
+            {isFree
+              ? "No fee for this gathering. We'll email you to confirm your spot."
+              : "Secure checkout by Stripe. Your " + r.feeLabel + " fee is non-refundable, except if SOULPRINT revokes your spot for misalignment (full refund)."}
           </p>
         </form>
       )}
