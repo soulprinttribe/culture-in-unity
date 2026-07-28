@@ -55,7 +55,6 @@ export async function POST(request) {
     const socials = (form.get("socials") || "").toString().trim();
     const description = (form.get("description") || "").toString().trim();
     const contractName = (form.get("contractName") || "").toString().trim();
-    const source = (form.get("source") || "").toString().trim();
     let details = {};
     try { details = JSON.parse((form.get("details") || "{}").toString()); } catch (e) { details = {}; }
 
@@ -98,9 +97,9 @@ export async function POST(request) {
         contract_name: contractName,
         contract_signed_at: new Date().toISOString(),
         role_color: r.color,
-        source,
         status: "pending",
-        fee_paid: false,
+        // Free roles have nothing to pay, so the spot counts immediately.
+        fee_paid: r.fee === 0,
       })
       .select()
       .single();
@@ -110,6 +109,11 @@ export async function POST(request) {
     }
 
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+    // Free role: no checkout, straight to confirmation.
+    if (r.fee === 0) {
+      return NextResponse.json({ url: base + "/submit/success?role=" + role });
+    }
     const session = await stripe().checkout.sessions.create({
       mode: "payment",
       customer_email: email || undefined,
