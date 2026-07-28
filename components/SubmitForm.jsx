@@ -163,8 +163,8 @@ export default function SubmitForm({ role }) {
         </div>
       ) : step === 1 ? (
         <form onSubmit={goContract}>
-          <label htmlFor="name">{isArtist ? "Your name" : "Brand / name"}</label>
-          <input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder={isArtist ? "Full name" : "Your brand or name"} />
+          <label htmlFor="name">{isArtist || isPerformer ? "Your name" : "Brand / name"}</label>
+          <input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder={isArtist || isPerformer ? "Full name" : "Your brand or name"} />
 
           <label htmlFor="email">Email (your pass lands here)</label>
           <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
