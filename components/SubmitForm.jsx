@@ -134,13 +134,23 @@ export default function SubmitForm({ role }) {
       </h1>
       <p className="center mt-1">
         {isArtist
-          ? "Exhibit and sell your original work at CULTURE IN UNITY."
+          ? "Display and sell your original work at CULTURE IN UNITY."
           : isPerformer
           ? "Share your sound on the stage at CULTURE IN UNITY."
           : "Bring your goods to the marketplace at CULTURE IN UNITY."}
         <br />
         <strong>{r.feeLabel}</strong> &middot; {EVENT.dateLabel} &middot; {EVENT.venueName}
       </p>
+
+      {(isArtist || isPerformer) && (
+        <p className="center mt-1">
+          {isArtist ? (
+            <>Bring your sound too - <Link href="/submit/perform">submit your music to perform</Link>.</>
+          ) : (
+            <>Bring your art too - <Link href="/submit/artist">show your work on the walls</Link>.</>
+          )}
+        </p>
+      )}
       {avail && !soldOut && (
         <p className="center muted mt-1">{avail.remaining} of {avail.cap} spots left</p>
       )}
