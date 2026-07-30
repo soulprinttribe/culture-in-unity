@@ -5,13 +5,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { EVENT, ADDONS, TIERS } from "@/lib/config";
+import { EVENT, TIERS } from "@/lib/config";
 
 export default function TicketsPage() {
   const [tiers, setTiers] = useState(null);
   const [selected, setSelected] = useState(null);
   const [qty, setQty] = useState(1);
-  const [foodQty, setFoodQty] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [source, setSource] = useState("");
@@ -29,11 +28,6 @@ export default function TicketsPage() {
       .catch(() => setError("Could not load ticket availability - refresh to retry."));
   }, []);
 
-  // Never let food plates exceed ticket count.
-  useEffect(() => {
-    setFoodQty((f) => Math.min(f, qty));
-  }, [qty]);
-
   async function buy(e) {
     e.preventDefault();
     setError("");
@@ -45,7 +39,7 @@ export default function TicketsPage() {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tierId: selected, quantity: qty, foodQty, name, email, source }),
+        body: JSON.stringify({ tierId: selected, quantity: qty, name, email, source }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Checkout failed.");
@@ -57,7 +51,7 @@ export default function TicketsPage() {
   }
 
   const unitPrice = selected && TIERS[selected] ? TIERS[selected].price : 0;
-  const total = unitPrice * qty + foodQty * ADDONS.food.price;
+  const total = unitPrice * qty;
 
   return (
     <main className="container" style={{ paddingTop: 40, paddingBottom: 80, maxWidth: 640 }}>
@@ -113,20 +107,6 @@ export default function TicketsPage() {
           <select id="qty" value={qty} onChange={(e) => setQty(parseInt(e.target.value, 10))}>
             {[1, 2, 3, 4, 5, 6].map((n) => <option key={n} value={n}>{n}</option>)}
           </select>
-
-          <div className="card mt-3" style={{ borderStyle: "dashed" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-              <span className="label" style={{ fontSize: "1.05rem" }}>Add a food plate</span>
-              <span className="label" style={{ fontSize: "1.05rem" }}>{ADDONS.food.priceLabel} each</span>
-            </div>
-            <p className="muted mt-1">{ADDONS.food.blurb}</p>
-            <label htmlFor="foodQty" className="mt-1">How many plates?</label>
-            <select id="foodQty" value={foodQty} onChange={(e) => setFoodQty(parseInt(e.target.value, 10))}>
-              {Array.from({ length: qty + 1 }, (_, i) => i).map((n) => (
-                <option key={n} value={n}>{n === 0 ? "No plate" : n}</option>
-              ))}
-            </select>
-          </div>
 
           <label htmlFor="name">Your name</label>
           <input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" autoComplete="name" />
