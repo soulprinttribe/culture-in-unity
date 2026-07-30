@@ -1,17 +1,16 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabase";
-import { TIERS, ADDONS, TOTAL_CAP, EVENT } from "@/lib/config";
+import { TIERS, TOTAL_CAP, EVENT } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
-// POST { tierId, quantity, foodQty, name, email } -> Stripe Checkout session URL
+// POST { tierId, quantity, name, email, source } -> Stripe Checkout session URL
 export async function POST(request) {
   try {
-    const { tierId, quantity = 1, foodQty = 0, name = "", email = "", source = "" } = await request.json();
+    const { tierId, quantity = 1, name = "", email = "", source = "" } = await request.json();
     const tier = TIERS[tierId];
     const qty = Math.max(1, Math.min(10, parseInt(quantity, 10) || 1));
-    const food = Math.max(0, Math.min(qty, parseInt(foodQty, 10) || 0));
     if (!tier) {
       return NextResponse.json({ error: "Unknown ticket tier." }, { status: 400 });
     }
@@ -46,20 +45,6 @@ export async function POST(request) {
       },
     ];
 
-    if (food > 0) {
-      line_items.push({
-        quantity: food,
-        price_data: {
-          currency: "usd",
-          unit_amount: ADDONS.food.price,
-          product_data: {
-            name: EVENT.name + " - " + ADDONS.food.name,
-            description: "Add-on: a plate from the collective meal.",
-          },
-        },
-      });
-    }
-
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
     const session = await stripe().checkout.sessions.create({
       mode: "payment",
@@ -69,7 +54,6 @@ export async function POST(request) {
       metadata: {
         tierId,
         quantity: String(qty),
-        food_qty: String(food),
         buyer_name: name,
         source: source || "",
       },
