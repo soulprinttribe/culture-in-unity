@@ -1,131 +1,115 @@
-"use client";
-
-// / - the portal, rebuilt from the actual flyer art:
-// real sky, real bubble-lettering title, the globe-head being with body.
-
 import Link from "next/link";
-import TitleArt from "@/components/TitleArt";
-import Cutout from "@/components/Cutout";
-import FlagBreak from "@/components/FlagBreak";
-import { EVENT, ACTIVATIONS } from "@/lib/config";
+import { EVENT, ACTIVATIONS, BRING } from "@/lib/config";
 
 export default function Home() {
   return (
-    <main style={{ overflow: "hidden", position: "relative" }}>
-      {/* Persistent skip-to-tickets - never block a sale */}
-      <div className="get-tickets-fab">
-        <Link href="/tickets" className="btn glow">Get Tickets</Link>
-      </div>
-
-      {/* PORTAL HERO - flyer sky + flyer title + the being */}
+    <main>
       <section
         style={{
-          minHeight: "100svh",
+          position: "relative",
+          minHeight: "92vh",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "flex-start",
+          justifyContent: "center",
           textAlign: "center",
-          position: "relative",
-          padding: "48px 20px 0",
-          backgroundImage: "url('/sky.jpg')",
+          padding: "48px 20px",
+          backgroundColor: "#2f6fd0",
+          backgroundImage: "url('/sitp-park.jpg')",
           backgroundSize: "cover",
-          backgroundPosition: "center top",
+          backgroundPosition: "center 35%",
         }}
       >
+        <p className="label" style={{ color: "#fff", letterSpacing: 2, textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}>
+          {EVENT.host} &middot; @soulprinttribe
+        </p>
+
         <img
-          src="/soulprint-logo.svg"
-          alt="SOULPRINT"
-          style={{ height: 300, marginBottom: 10, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.3))" }}
+          src="/sitp-title.png"
+          alt={EVENT.name}
+          style={{ width: "min(88%, 620px)", height: "auto", margin: "14px 0 6px" }}
         />
-        <p className="label" style={{ fontSize: "clamp(1.2rem, 3vw, 1.8rem)", letterSpacing: "0.18em", color: "var(--cyan)", textShadow: "2px 2px 0 var(--indigo), 0 0 18px rgba(75,47,208,0.6)" }}>
-          {EVENT.frame}
-        </p>
 
-        {/* The exact flyer title, white keyed out + cropped at runtime */}
-        <div className="mt-2" style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-          <TitleArt
-            src="/CULTURE%20IN%20UNITY%20V3_2.png.jpg"
-            alt="CULTURE IN UNITY"
-            maxWidth={560}
-          />
+        <div
+          className="card"
+          style={{
+            background: "var(--sun-yellow)",
+            color: "#1a1a6a",
+            display: "inline-block",
+            padding: "10px 22px",
+            transform: "rotate(-2deg)",
+          }}
+        >
+          <span className="label" style={{ fontSize: "1.35rem" }}>FREE &middot; NO TICKET &middot; JUST COME</span>
         </div>
 
-        <p className="label mt-2" style={{ fontSize: "clamp(1.05rem, 2.6vw, 1.5rem)", color: "#fff", textShadow: "0 0 16px rgba(75,47,208,0.95), 0 0 34px rgba(75,47,208,0.7), 0 2px 4px rgba(26,26,80,0.8)" }}>
-          {EVENT.tagline} · {EVENT.tagline2}
-        </p>
-        <p className="label mt-1" style={{ fontSize: "clamp(0.95rem, 2.2vw, 1.2rem)", color: "#fff", textShadow: "0 0 16px rgba(75,47,208,0.95), 0 0 34px rgba(75,47,208,0.7), 0 2px 4px rgba(26,26,80,0.8)" }}>
-          <strong>{EVENT.dateLabel} · {EVENT.timeLabel}</strong><br />
-          {EVENT.venueName} · {EVENT.venueAddress}
+        <p style={{ color: "#fff", fontSize: "1.25rem", fontWeight: 700, marginTop: 18, textShadow: "0 2px 10px rgba(0,0,0,0.6)" }}>
+          {EVENT.dateLabel} &middot; {EVENT.timeLabel}<br />
+          {EVENT.venueName}<br />
+          {EVENT.venueAddress}
         </p>
 
-        <div className="mt-3" style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", zIndex: 2 }}>
-          <Link href="/tickets" className="btn" style={{ fontSize: "1.1rem" }}>Step through - Get Tickets</Link>
-          <a href="#journey" className="btn secondary">Enter the world</a>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", marginTop: 26 }}>
+          <Link href="/tickets" className="btn glow" style={{ fontSize: "1.15rem" }}>Let us know you are coming</Link>
+          <Link href={EVENT.mapUrl} className="btn secondary">Open the map</Link>
         </div>
 
-        {/* Creator applications - artists & vendors */}
-        <p className="label mt-3" style={{ fontSize: "clamp(0.85rem, 2vw, 1rem)", letterSpacing: "0.16em", color: "#fff", textShadow: "0 0 14px rgba(75,47,208,0.9), 0 2px 4px rgba(26,26,80,0.8)" }}>
-          Bring your gift to the circle
+        <p style={{ color: "#fff", marginTop: 22, fontStyle: "italic", textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>
+          {EVENT.tagline}
         </p>
-        <div className="mt-1" style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", zIndex: 2 }}>
-          <Link href="/submit/artist" className="btn secondary" style={{ fontSize: "0.95rem" }}>Show your art</Link>
-          <Link href="/submit/vendor" className="btn secondary" style={{ fontSize: "0.95rem" }}>Become a vendor</Link>
-        </div>
-
-        {/* The globe-head being, body and all - white background flood-filled away */}
-        <Cutout
-          src="/CULTURE%20IN%20UNITY%20V3_1.png"
-          alt="The globe-head being holding planet Earth as its head"
-          style={{ width: "min(88vw, 620px)", marginTop: -40, display: "block", pointerEvents: "none" }}
-        />
       </section>
 
-      {/* THE JOURNEY (Phase 1 preview; full scroll-scenes = Phase 2) */}
-      <section id="journey" className="container" style={{ paddingTop: 40, paddingBottom: 40 }}>
-        <FlagBreak />
-        <h2 className="center" style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)", fontFamily: "var(--font-label), Impact, 'Arial Narrow Bold', sans-serif" }}>
-          One day. Nine portals.
-        </h2>
-        <p className="center mt-1 muted" style={{ maxWidth: 620, margin: "8px auto 0" }}>
-          SOULPRINT has always built portals - this is the next one you step through.
-          Tap any portal below to step inside. Times will settle as the run-of-show is finalized.
-        </p>
-
-        <div className="mt-3" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14 }}>
+      <section className="container" style={{ paddingTop: 56, paddingBottom: 40, maxWidth: 760 }}>
+        <h2 className="center">The day</h2>
+        <div className="ribbon mt-2 mb-3" />
+        <div style={{ display: "grid", gap: 12 }}>
           {ACTIVATIONS.map((a) => (
-            <Link key={a.id} href={"/portal/" + a.id} className="card" style={{ display: "flex", flexDirection: "column", textDecoration: "none", color: "inherit", padding: "16px 18px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
-                <h3 style={{ fontSize: "1.05rem" }}>{a.name}</h3>
-                <span className="muted" style={{ fontSize: "0.85rem", whiteSpace: "nowrap" }}>{a.time}</span>
+            <div key={a.id} className="card">
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
+                <span className="label" style={{ fontSize: "1.1rem" }}>{a.name}</span>
+                <span className="label" style={{ whiteSpace: "nowrap" }}>{a.time}</span>
               </div>
-              <p className="muted" style={{ fontSize: "0.9rem", margin: "6px 0 0" }}>{a.mini || a.desc}</p>
-              <p className="label" style={{ fontSize: "0.8rem", color: "var(--sun-yellow)", margin: "auto 0 0", paddingTop: 10 }}>Tap to explore &rarr;</p>
-            </Link>
+              <p className="muted mt-1">{a.desc}</p>
+            </div>
           ))}
         </div>
+        <p className="center muted mt-3">Come for an hour or stay for all five. However you show up is right.</p>
+      </section>
 
-        <div className="center mt-4">
-          <p style={{ fontSize: "1.15rem", fontStyle: "italic" }}>
-            Don&apos;t just read about the portal. Walk through it.
-          </p>
-          <Link href="/tickets" className="btn glow mt-2" style={{ fontSize: "1.15rem" }}>
-            Get Tickets
-          </Link>
-          <div className="mt-2" style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
-            <Link href="/submit/artist" className="btn secondary">Show your art</Link>
-            <Link href="/submit/vendor" className="btn secondary">Become a vendor</Link>
-          </div>
+      <section className="container" style={{ paddingBottom: 40, maxWidth: 760 }}>
+        <div className="card center" style={{ background: "rgba(245,232,41,0.18)" }}>
+          <h3>Bring</h3>
+          <p className="mt-1" style={{ fontSize: "1.1rem" }}>{BRING.join(" · ")}</p>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="container center" style={{ padding: "50px 20px 110px" }}>
-        <FlagBreak />
-        <p className="label">Peace and blessings.</p>
-        <p className="muted mt-1">
-          Hosted by {EVENT.host} · <Link href="/info">Event info</Link> · <Link href="/terms">Terms</Link> · <Link href="/privacy">Privacy</Link>
+      <section className="container" style={{ paddingBottom: 56, maxWidth: 760 }}>
+        <h2 className="center">Want to share something?</h2>
+        <div className="ribbon mt-2 mb-3" />
+        <div style={{ display: "grid", gap: 12 }}>
+          <Link href="/submit/artist" className="card" style={{ display: "block", textDecoration: "none", color: "inherit" }}>
+            <span className="label" style={{ fontSize: "1.1rem" }}>Show your art &rarr;</span>
+            <p className="muted mt-1">Bring your work and show it in the open air. Free.</p>
+          </Link>
+          <Link href="/submit/perform" className="card" style={{ display: "block", textDecoration: "none", color: "inherit" }}>
+            <span className="label" style={{ fontSize: "1.1rem" }}>Perform your music &rarr;</span>
+            <p className="muted mt-1">Share your sound on the grass. Free.</p>
+          </Link>
+          <Link href="/submit/vendor" className="card" style={{ display: "block", textDecoration: "none", color: "inherit" }}>
+            <span className="label" style={{ fontSize: "1.1rem" }}>Become a vendor &rarr;</span>
+            <p className="muted mt-1">A small circle of conscious makers.</p>
+          </Link>
+        </div>
+      </section>
+
+      <footer className="container center" style={{ paddingBottom: 60, maxWidth: 760 }}>
+        <div className="ribbon mb-3" />
+        <p className="label" style={{ fontSize: "1.1rem" }}>{EVENT.tagline2}</p>
+        <p className="muted mt-2">Peace and blessings.</p>
+        <p className="mt-3">
+          <Link href="/info">Event info</Link> &middot; <Link href="/terms">Terms</Link> &middot; <Link href="/privacy">Privacy</Link>
         </p>
+        <p className="muted mt-2">{EVENT.host} &middot; @soulprinttribe</p>
       </footer>
     </main>
   );
