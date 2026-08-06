@@ -33,14 +33,15 @@ export default function Home() {
         <div
           className="card"
           style={{
-            background: "var(--sun-yellow)",
-            color: "#1a1a6a",
+            background: "#19189A",
+            border: "3px solid #F5E829",
             display: "inline-block",
-            padding: "10px 22px",
+            padding: "12px 26px",
             transform: "rotate(-2deg)",
+            boxShadow: "0 4px 18px rgba(0,0,0,0.35)",
           }}
         >
-          <span className="label" style={{ fontSize: "1.35rem" }}>FREE &middot; NO TICKET &middot; JUST COME</span>
+          <span className="label" style={{ fontSize: "1.35rem", color: "#F5E829" }}>FREE &middot; NO TICKET &middot; JUST COME</span>
         </div>
 
         <p style={{ color: "#fff", fontSize: "1.25rem", fontWeight: 700, marginTop: 18, textShadow: "0 2px 10px rgba(0,0,0,0.6)" }}>
