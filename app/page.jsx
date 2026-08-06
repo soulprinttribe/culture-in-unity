@@ -87,10 +87,6 @@ export default function Home() {
         <h2 className="center">Want to share something?</h2>
         <div className="ribbon mt-2 mb-3" />
         <div style={{ display: "grid", gap: 12 }}>
-          <Link href="/submit/artist" className="card" style={{ display: "block", textDecoration: "none", color: "inherit" }}>
-            <span className="label" style={{ fontSize: "1.1rem" }}>Show your art &rarr;</span>
-            <p className="muted mt-1">Bring your work and show it in the open air. Free.</p>
-          </Link>
           <Link href="/submit/perform" className="card" style={{ display: "block", textDecoration: "none", color: "inherit" }}>
             <span className="label" style={{ fontSize: "1.1rem" }}>Perform your music &rarr;</span>
             <p className="muted mt-1">Share your sound on the grass. Free.</p>
