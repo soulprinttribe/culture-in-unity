@@ -15,7 +15,7 @@ export default function Home() {
           textAlign: "center",
           padding: "48px 20px",
           backgroundColor: "#2f6fd0",
-          backgroundImage: "url('/sitp-park.jpg')",
+          backgroundImage: "url('/sitp-park.jpg.png')",
           backgroundSize: "cover",
           backgroundPosition: "center 35%",
         }}
