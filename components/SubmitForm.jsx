@@ -1,8 +1,6 @@
 "use client";
 
-// Self-serve participant funnel (artist / vendor):
-// details + images  ->  sign the on-site agreement  ->  Stripe checkout.
-// No approval gate. Caps enforced server-side. Matches the site's sky world.
+// Self-serve participant funnel (artist / performer / vendor).
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -57,7 +55,7 @@ export default function SubmitForm({ role }) {
   function validateDetails() {
     if (!name.trim()) return "Please enter your " + (isArtist || isPerformer ? "name" : "brand / name") + ".";
     if (!/^\S+@\S+\.\S+$/.test(email)) return "Please enter a valid email - your pass is sent there.";
-    if (isArtist && !title.trim()) return "Please give your work a title - it becomes your wall card.";
+    if (isArtist && !title.trim()) return "Please give your work a title.";
     if (!description.trim()) {
       if (isArtist) return "Please describe your work.";
       if (isPerformer) return "Please tell us about your sound.";
@@ -134,10 +132,10 @@ export default function SubmitForm({ role }) {
       </h1>
       <p className="center mt-1">
         {isArtist
-          ? "Display and sell your original work at CULTURE IN UNITY."
+          ? "Bring your original work and share it on the grass at " + EVENT.name + "."
           : isPerformer
-          ? "Share your sound on the stage at CULTURE IN UNITY."
-          : "Bring your goods to the marketplace at CULTURE IN UNITY."}
+          ? "Share your sound at " + EVENT.name + "."
+          : "Bring your goods to the marketplace at " + EVENT.name + "."}
         <br />
         <strong>{r.feeLabel}</strong> &middot; {EVENT.dateLabel} &middot; {EVENT.venueName}
       </p>
@@ -147,7 +145,7 @@ export default function SubmitForm({ role }) {
           {isArtist ? (
             <>Bring your sound too - <Link href="/submit/perform">submit your music to perform</Link>.</>
           ) : (
-            <>Bring your art too - <Link href="/submit/artist">show your work on the walls</Link>.</>
+            <>Bringing art? You are welcome to share it on the grass - <Link href="/submit/artist">let us know here</Link>.</>
           )}
         </p>
       )}
@@ -159,7 +157,7 @@ export default function SubmitForm({ role }) {
       {soldOut ? (
         <div className="card center mt-3">
           <h3>Spots are full</h3>
-          <p className="mt-2">All {r.label.toLowerCase()} spots for this event have been claimed. Thank you for the love - reply to any of our emails to join the waitlist.</p>
+          <p className="mt-2">All {r.label.toLowerCase()} spots for this gathering have been claimed. Thank you for the love - reply to any of our emails to join the waitlist.</p>
         </div>
       ) : step === 1 ? (
         <form onSubmit={goContract}>
@@ -175,7 +173,7 @@ export default function SubmitForm({ role }) {
           {isArtist ? (
             <>
               <label htmlFor="title">Title of your work</label>
-              <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Shown on your wall card" />
+              <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Shown beside your piece" />
 
               <label htmlFor="medium">Medium</label>
               <input id="medium" value={medium} onChange={(e) => setMedium(e.target.value)} placeholder="Acrylic, photography, digital print..." />
@@ -187,7 +185,7 @@ export default function SubmitForm({ role }) {
               </select>
 
               <label htmlFor="dimensions">Size / dimensions</label>
-              <input id="dimensions" value={dimensions} onChange={(e) => setDimensions(e.target.value)} placeholder='e.g. 24" x 36", or screen size' />
+              <input id="dimensions" value={dimensions} onChange={(e) => setDimensions(e.target.value)} placeholder="Roughly how big is it?" />
 
               <label htmlFor="description">Tell us about your work</label>
               <textarea id="description" rows={4} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="This + your title become the card beside your piece." />
@@ -207,11 +205,11 @@ export default function SubmitForm({ role }) {
           ) : isPerformer ? (
             <>
               <label htmlFor="description">Tell us about your sound</label>
-              <textarea id="description" rows={4} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Genre, message, what you'd bring to the room." />
+              <textarea id="description" rows={4} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Genre, message, what you would bring to the circle." />
 
               <label htmlFor="musicLink">Link to your music</label>
               <input id="musicLink" value={musicLink} onChange={(e) => setMusicLink(e.target.value)} placeholder="SoundCloud, Spotify, Drive, YouTube, IG..." />
-              <p className="muted mt-1">Any public link works. Bring your track files with you on the day - we&apos;ll collect them at the welcome table.</p>
+              <p className="muted mt-1">Any public link works. Bring your track files with you on the day - we will collect them at the welcome table.</p>
 
               <label htmlFor="setLength">How long is your set?</label>
               <select id="setLength" value={setLength} onChange={(e) => setSetLength(e.target.value)}>
@@ -282,7 +280,7 @@ export default function SubmitForm({ role }) {
           </p>
           <p className="muted center mt-1">
             {isFree
-              ? "No fee for this gathering. We'll email you to confirm your spot."
+              ? "No fee for this gathering. We will email you to confirm your spot."
               : "Secure checkout by Stripe. Your " + r.feeLabel + " fee is non-refundable, except if SOULPRINT revokes your spot for misalignment (full refund)."}
           </p>
         </form>
