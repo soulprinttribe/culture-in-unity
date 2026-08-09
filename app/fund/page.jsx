@@ -1,11 +1,13 @@
 "use client";
 
-// /fund - FUND THE TRIBE. QR destination from the painted sign.
-// A gift of any size, straight to the vision. No pressure, no tiers of worth.
+// /fund - FUND THE TRIBE. True SOULPRINT brand: royal blue + gold, Impact.
+// Self-contained styling - independent of the event site's look.
 
 import { useState } from "react";
-import Link from "next/link";
-import { EVENT } from "@/lib/config";
+
+const BLUE = "#19189A";
+const GOLD = "#E5E630";
+const IMPACT = "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif";
 
 const PRESETS = [5.55, 11.11, 22.22, 44.44];
 
@@ -53,44 +55,66 @@ export default function FundPage() {
     }
   }
 
+  const wrap = {
+    minHeight: "100vh",
+    background: BLUE,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "48px 22px 80px",
+    fontFamily: "Arial, Helvetica, sans-serif",
+  };
+  const h1 = {
+    fontFamily: IMPACT,
+    color: GOLD,
+    fontSize: "clamp(3rem, 13vw, 4.6rem)",
+    lineHeight: 0.95,
+    letterSpacing: 1,
+    textAlign: "center",
+    margin: "18px 0 10px",
+    textTransform: "uppercase",
+  };
+  const label = {
+    display: "block",
+    marginTop: 20,
+    color: GOLD,
+    fontFamily: IMPACT,
+    letterSpacing: 2,
+    fontSize: "0.95rem",
+    textTransform: "uppercase",
+  };
+
   return (
-    <main className="container" style={{ paddingTop: 40, paddingBottom: 80, maxWidth: 560 }}>
-      <p className="center"><Link href="/" className="muted">back to the portal</Link></p>
-      <h1 className="center" style={{ fontSize: "clamp(2rem, 8vw, 3.2rem)" }}>Fund The Tribe</h1>
-      <p className="center mt-1" style={{ fontSize: "1.05rem" }}>
-        Everything we gather is free, and it stays free.<br />
-        What you plant here is what grows.
+    <main style={wrap}>
+      <img src="/SOULPRINT%20LOGO_YELLOW_V2.png" alt="SOULPRINT" style={{ width: 120, height: "auto", marginTop: 10 }} />
+      <h1 style={h1}>Fund<br />The Tribe</h1>
+      <p style={{ color: "#fff", fontSize: "1.1rem", textAlign: "center", maxWidth: 420, margin: 0 }}>
+        Everything we gather is free, and it stays free.
       </p>
-      <div className="ribbon mt-2 mb-2" />
+      <p style={{ color: "#b9b8f5", textAlign: "center", maxWidth: 420, lineHeight: 1.55, margin: "10px 0 0" }}>
+        Your gift goes directly into the vision - sound for the circle, art
+        supplies, space for the tribe to gather, and keeping every experience
+        open to anyone who feels the call, no matter what is in their pocket.
+      </p>
 
-      <div className="card" style={{ background: "rgba(245,232,41,0.18)" }}>
-        <p style={{ margin: 0 }}>
-          Your gift goes directly into the vision - sound for the circle, art supplies,
-          space for the tribe to gather, and keeping every experience open to anyone
-          who feels the call, no matter what is in their pocket.
-        </p>
-      </div>
-
-      <form onSubmit={give} className="mt-3">
-        <label>Choose an amount</label>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+      <form onSubmit={give} style={{ width: "100%", maxWidth: 440, marginTop: 8 }}>
+        <label style={label}>Choose an amount</label>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 8 }}>
           {PRESETS.map((v) => (
             <button
               type="button"
               key={v}
               onClick={() => pick(v)}
-              className="card"
               style={{
-                textAlign: "center",
+                padding: "18px 8px",
+                borderRadius: 14,
                 cursor: "pointer",
-                padding: "16px 8px",
-                fontFamily: "inherit",
-                fontSize: "1.15rem",
-                fontWeight: 700,
-                color: "inherit",
-                borderColor: selected === v ? "var(--sun-yellow)" : undefined,
-                borderWidth: selected === v ? 3 : 2,
-                background: selected === v ? "rgba(245,232,41,0.18)" : undefined,
+                fontFamily: IMPACT,
+                fontSize: "1.35rem",
+                letterSpacing: 1,
+                background: selected === v ? GOLD : "#100f6e",
+                color: selected === v ? BLUE : GOLD,
+                border: "3px solid " + GOLD,
               }}
             >
               ${v.toFixed(2)}
@@ -98,7 +122,7 @@ export default function FundPage() {
           ))}
         </div>
 
-        <label htmlFor="amount" className="mt-2">Or type your own</label>
+        <label style={label} htmlFor="amount">Or type your own</label>
         <input
           id="amount"
           type="number"
@@ -108,26 +132,56 @@ export default function FundPage() {
           value={amount}
           onChange={(e) => typeAmount(e.target.value)}
           placeholder="Any amount, from the heart"
+          style={{
+            width: "100%",
+            boxSizing: "border-box",
+            padding: "15px 16px",
+            fontSize: "1.05rem",
+            borderRadius: 12,
+            border: "3px solid " + GOLD,
+            background: "#100f6e",
+            color: "#ffffff",
+            outline: "none",
+            marginTop: 6,
+          }}
         />
 
         {error && (
-          <p className="mt-2" style={{ background: "var(--ribbon-red)", padding: "10px 14px", borderRadius: 12, fontWeight: 600 }}>
+          <p style={{ background: "#e0403f", color: "#fff", padding: "12px 14px", borderRadius: 12, fontWeight: 700, marginTop: 16 }}>
             {error}
           </p>
         )}
 
-        <button type="submit" className="btn glow mt-3" style={{ width: "100%", fontSize: "1.2rem" }} disabled={busy}>
-          {busy ? "Opening secure checkout..." : "Give to the vision"}
+        <button
+          type="submit"
+          disabled={busy}
+          style={{
+            width: "100%",
+            marginTop: 24,
+            padding: "16px",
+            background: GOLD,
+            color: BLUE,
+            border: "none",
+            borderRadius: 14,
+            fontFamily: IMPACT,
+            fontSize: "1.4rem",
+            letterSpacing: 2,
+            textTransform: "uppercase",
+            cursor: "pointer",
+            boxShadow: "0 5px 0 #0d0c55",
+          }}
+        >
+          {busy ? "Opening secure checkout..." : "Give To The Vision"}
         </button>
-        <p className="muted center mt-2">
-          Secure payment by Stripe. Every dollar goes to {EVENT.host}.<br />
-          Thank you for building this with us.
+        <p style={{ color: "#b9b8f5", textAlign: "center", marginTop: 14, fontSize: "0.9rem" }}>
+          Secure payment by Stripe. Every dollar goes to SOULPRINT COLLECTIVE.
         </p>
       </form>
 
-      <p className="center mt-3 muted">
+      <p style={{ color: "#b9b8f5", marginTop: 26, fontSize: "0.95rem", textAlign: "center" }}>
         Rather give your time, your art, or your sound?{" "}
-        <Link href="/join">Join the tribe</Link> - that is worth more than money.
+        <a href="/join" style={{ color: GOLD, fontWeight: 700 }}>Join the tribe</a>
+        <br />That is worth more than money.
       </p>
     </main>
   );
