@@ -95,14 +95,22 @@ export default function CreatorPage({ params }) {
               if (!e) return null;
               if (e.kind === "iframe") {
                 return (
-                  <div key={i} style={{ position: "relative", paddingBottom: "177.78%", height: 0, marginTop: 14, borderRadius: 16, overflow: "hidden", border: "3px solid " + GOLD, background: "#000" }}>
-                    <iframe
-                      src={e.src}
-                      title={c.name + " video " + (i + 1)}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
-                    />
+                  <div key={i}>
+                    <div style={{ position: "relative", paddingBottom: "177.78%", height: 0, marginTop: 14, borderRadius: 16, overflow: "hidden", border: "3px solid " + GOLD, background: "#000" }}>
+                      <iframe
+                        src={e.src}
+                        title={c.name + " video " + (i + 1)}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        scrolling="no"
+                        style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
+                      />
+                    </div>
+                    {e.fallback ? (
+                      <a href={e.fallback} target="_blank" rel="noopener noreferrer" style={{ display: "block", marginTop: 8, color: "#b9b8f5", fontSize: "0.88rem", textDecoration: "underline" }}>
+                        Video not loading? Open it on Instagram
+                      </a>
+                    ) : null}
                   </div>
                 );
               }
