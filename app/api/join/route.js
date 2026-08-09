@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { syncToBrevo } from "@/lib/brevo";
+import { supabaseAdmin } from "@/lib/supabase";
 import { EVENT } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
@@ -28,7 +29,7 @@ function welcomeHtml(firstName) {
     + '</div></div></body></html>';
 }
 
-// POST { name, email } -> Brevo list + welcome email with the Discord invite.
+// POST { name, email } -> tribe table + Brevo list + instant welcome email with Discord invite.
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -42,12 +43,23 @@ export async function POST(request) {
       return NextResponse.json({ error: "Please enter a valid email." }, { status: 400 });
     }
 
+    // 1. Record in our own table (fails soft - never blocks the welcome).
+    try {
+      const db = supabaseAdmin();
+      const { error } = await db.from("tribe").insert({ name, email, source: "join-page" });
+      if (error) console.error("[join] tribe insert failed:", error.message);
+    } catch (e) {
+      console.error("[join] db unavailable:", e.message);
+    }
+
+    // 2. Brevo list (fails soft).
     try {
       await syncToBrevo({ email, name, tags: ["tribe", "join-the-tribe"] });
     } catch (e) {
       console.error("[join] brevo sync failed:", e.message);
     }
 
+    // 3. Instant welcome email with the Discord invite.
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
