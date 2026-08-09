@@ -4,12 +4,13 @@ import { EVENT } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
-// POST { amount } -> Stripe Checkout for a donation of any size.
-// metadata.type = "donation" so the webhook never treats this as a ticket.
+// POST { amount, note } -> Stripe Checkout for a donation of any size.
+// metadata.type = "donation" so the webhook records it and never makes a ticket.
 export async function POST(request) {
   try {
     const body = await request.json();
     const amount = Math.round(parseFloat(body.amount) * 100);
+    const note = String(body.note || "").trim().slice(0, 400);
 
     if (!amount || isNaN(amount) || amount < 100) {
       return NextResponse.json({ error: "Please enter an amount of $1 or more." }, { status: 400 });
@@ -34,7 +35,7 @@ export async function POST(request) {
           },
         },
       ],
-      metadata: { type: "donation" },
+      metadata: { type: "donation", note: note },
       success_url: base + "/fund/thankyou",
       cancel_url: base + "/fund",
     });
