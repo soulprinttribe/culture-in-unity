@@ -14,6 +14,7 @@ const PRESETS = [5.55, 11.11, 22.22, 44.44];
 export default function FundPage() {
   const [amount, setAmount] = useState("");
   const [selected, setSelected] = useState(null);
+  const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -44,7 +45,7 @@ export default function FundPage() {
       const res = await fetch("/api/donate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: value }),
+        body: JSON.stringify({ amount: value, note: note }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Something went wrong.");
@@ -82,6 +83,19 @@ export default function FundPage() {
     letterSpacing: 2,
     fontSize: "0.95rem",
     textTransform: "uppercase",
+  };
+  const field = {
+    width: "100%",
+    boxSizing: "border-box",
+    padding: "15px 16px",
+    fontSize: "1.05rem",
+    borderRadius: 12,
+    border: "3px solid " + GOLD,
+    background: "#100f6e",
+    color: "#ffffff",
+    outline: "none",
+    marginTop: 6,
+    fontFamily: "Arial, Helvetica, sans-serif",
   };
 
   return (
@@ -132,18 +146,17 @@ export default function FundPage() {
           value={amount}
           onChange={(e) => typeAmount(e.target.value)}
           placeholder="Any amount, from the heart"
-          style={{
-            width: "100%",
-            boxSizing: "border-box",
-            padding: "15px 16px",
-            fontSize: "1.05rem",
-            borderRadius: 12,
-            border: "3px solid " + GOLD,
-            background: "#100f6e",
-            color: "#ffffff",
-            outline: "none",
-            marginTop: 6,
-          }}
+          style={field}
+        />
+
+        <label style={label} htmlFor="note">Leave a note (optional)</label>
+        <textarea
+          id="note"
+          rows={3}
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="A word for the tribe, or where you wish this to go..."
+          style={field}
         />
 
         {error && (
